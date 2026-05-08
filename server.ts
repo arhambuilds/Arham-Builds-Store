@@ -43,6 +43,13 @@ async function startServer() {
   const githubRepo = process.env.GITHUB_REPO;
   const githubBranch = process.env.GITHUB_BRANCH || 'main';
 
+  console.log('🐙 GitHub Config loaded:', {
+    hasToken: !!githubToken,
+    owner: githubOwner,
+    repo: githubRepo,
+    branch: githubBranch
+  });
+
   // API Routes
   app.post("/api/admin/save-products", async (req, res) => {
     console.log('📥 Received save-products request');

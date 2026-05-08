@@ -1,6 +1,11 @@
 import { Octokit } from "@octokit/rest";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export default async function handler(req: any, res: any) {
+  console.log('📥 Serverless function: Received save-products request');
+  
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, message: 'Method not allowed' });
   }
@@ -19,6 +24,7 @@ export default async function handler(req: any, res: any) {
     password !== ADMIN_CREDENTIALS.password || 
     secretCode !== ADMIN_CREDENTIALS.secretCode
   ) {
+    console.warn('❌ Serverless: Unauthorized access attempt');
     return res.status(401).json({ success: false, message: "Unauthorized. Please logout and login again." });
   }
 
@@ -28,9 +34,16 @@ export default async function handler(req: any, res: any) {
   const githubRepo = process.env.GITHUB_REPO;
   const githubBranch = process.env.GITHUB_BRANCH || 'main';
 
+  console.log('🐙 Serverless: GitHub Config checked:', { 
+    hasToken: !!githubToken, 
+    owner: githubOwner, 
+    repo: githubRepo 
+  });
+
   try {
     // On Vercel, we rely primarily on GitHub sync as the filesystem is read-only
     if (githubToken && githubOwner && githubRepo) {
+      console.log('🚀 Serverless: Attempting GitHub Sync...');
       const octokit = new Octokit({ auth: githubToken });
       const filePath = 'src/products.json';
 
