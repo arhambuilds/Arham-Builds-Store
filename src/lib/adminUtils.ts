@@ -61,9 +61,9 @@ export const logoutAdmin = () => {
   localStorage.removeItem(ADMIN_SESSION_KEY);
 };
 
-export const saveProductsToServer = async (products: Product[]): Promise<boolean> => {
+export const saveProductsToServer = async (products: Product[]): Promise<{ success: boolean; message?: string }> => {
   const sessionStr = localStorage.getItem(ADMIN_SESSION_KEY);
-  if (!sessionStr) return false;
+  if (!sessionStr) return { success: false, message: 'Session expired. Please logout and login again.' };
 
   try {
     const { username, password } = JSON.parse(sessionStr);
@@ -81,10 +81,11 @@ export const saveProductsToServer = async (products: Product[]): Promise<boolean
     const result = await response.json();
     if (result.success) {
       saveProducts(products); // Also sync local storage for immediate UI update
-      return true;
+      return { success: true };
     }
-  } catch (e) {
+    return { success: false, message: result.message || 'Server error' };
+  } catch (e: any) {
     console.error('Save to server failed:', e);
+    return { success: false, message: e.message };
   }
-  return false;
 };

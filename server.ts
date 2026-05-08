@@ -41,7 +41,8 @@ async function startServer() {
       password !== ADMIN_CREDENTIALS.password || 
       secretCode !== ADMIN_CREDENTIALS.secretCode
     ) {
-      return res.status(401).json({ success: false, message: "Unauthorized" });
+      console.warn('❌ Unauthorized access attempt:', { username, providedPin: secretCode });
+      return res.status(401).json({ success: false, message: "Unauthorized: Invalid credentials or PIN. Try logging out and back in." });
     }
 
     if (!Array.isArray(products)) {

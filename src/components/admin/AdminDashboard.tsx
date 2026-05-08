@@ -52,14 +52,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
   const handleDelete = async () => {
     if (verifyPin(actionPin)) {
       const updated = products.filter(p => p.id !== showPinModal?.id);
-      const success = await saveProductsToServer(updated);
-      if (success) {
+      const result = await saveProductsToServer(updated);
+      if (result.success) {
         setProducts(updated);
         setShowPinModal(null);
         setActionPin('');
         setPinError(false);
       } else {
-        alert('Failed to save changes to server. Please check your connection.');
+        alert(result.message || 'Failed to save changes to server.');
       }
     } else {
       setPinError(true);
@@ -74,13 +74,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
       updated = [newProduct, ...products];
     }
     
-    const success = await saveProductsToServer(updated);
-    if (success) {
+    const result = await saveProductsToServer(updated);
+    if (result.success) {
       setProducts(updated);
       setIsFormOpen(false);
       setEditingProduct(null);
     } else {
-      alert('Failed to save product to server.');
+      alert(result.message || 'Failed to save product to server.');
     }
   };
 
