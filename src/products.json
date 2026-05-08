@@ -1,28 +1,5 @@
 [
   {
-    "id": "mpjx27den",
-    "slug": "admin@2728",
-    "title": "admin@2728",
-    "description": "Arham ",
-    "currentPrice": 444,
-    "originalPrice": 555,
-    "thumbnailUrl": "https://arham-builds-store.vercel.app/admin",
-    "videoUrl": "https://arham-builds-store.vercel.app/admin",
-    "category": "Birthday",
-    "subCategory": "Templates",
-    "checkoutUrl": "https://arham-builds-store.vercel.app/admin",
-    "demoUrl": "https://arham-builds-store.vercel.app/admin",
-    "features": [],
-    "whatYouReceive": [],
-    "whyChoose": [
-      {
-        "label": "",
-        "description": ""
-      }
-    ],
-    "whereToUse": []
-  },
-  {
     "id": "p1",
     "slug": "happy-birthday-sahiba-v2",
     "title": "Happy Birthday Sahiba",
