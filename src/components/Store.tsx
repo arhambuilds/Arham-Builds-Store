@@ -175,7 +175,7 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className={cn(
-        "group relative bg-white rounded-2xl border border-primary/5 overflow-hidden card-shadow transition-all duration-500 flex flex-col h-full",
+        "group relative bg-white rounded-2xl border border-primary/5 overflow-hidden card-shadow transition-all duration-500 flex flex-col h-full optimize-gpu",
         isOutOfStock && "opacity-75 grayscale-[0.5]"
       )}
     >
@@ -195,6 +195,8 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
         <img 
           src={product.thumbnailUrl} 
           alt={product.title} 
+          loading="lazy"
+          referrerPolicy="no-referrer"
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
         
@@ -261,7 +263,7 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
               to={`/store/${product.id}`}
               className="group/btn relative overflow-hidden w-full bg-primary text-white py-3.5 rounded-xl font-black flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-primary/20 uppercase tracking-[0.2em] text-[10px]"
             >
-              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-shimmer pointer-events-none"></div>
+              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:animate-shimmer pointer-events-none"></div>
               <Eye size={18} className="group-hover/btn:scale-110 transition-transform" />
               VIEW
             </Link>

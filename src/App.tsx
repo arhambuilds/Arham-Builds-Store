@@ -24,6 +24,7 @@ import FreebiesPage from './components/FreebiesPage';
 import FAQ from './components/FAQ';
 import About from './components/About';
 import AdminPage from './components/admin/AdminPage';
+import Preloader from './components/Preloader';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -125,6 +126,7 @@ export default function App() {
   return (
     <Router>
       <ScrollToTop />
+      <Preloader />
       <div className="min-h-screen bg-secondary selection:bg-primary/10 selection:text-primary">
         <AnimatedRoutes />
       </div>
