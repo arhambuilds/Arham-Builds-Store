@@ -19,7 +19,7 @@ export default async function handler(req: any, res: any) {
     password !== ADMIN_CREDENTIALS.password || 
     secretCode !== ADMIN_CREDENTIALS.secretCode
   ) {
-    return res.status(401).json({ success: true, message: "Unauthorized. Please logout and login again." });
+    return res.status(401).json({ success: false, message: "Unauthorized. Please logout and login again." });
   }
 
   const content = JSON.stringify(products, null, 2);

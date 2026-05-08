@@ -17,6 +17,12 @@ async function startServer() {
 
   // Middleware
   app.use(express.json({ limit: '10mb' }));
+  
+  // Logging middleware
+  app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    next();
+  });
 
   // Admin API Credentials (Matching adminUtils.ts)
   const ADMIN_CREDENTIALS = {
@@ -24,6 +30,12 @@ async function startServer() {
     password: process.env.VITE_ADMIN_PASSWORD || 'admin@2728',
     secretCode: process.env.VITE_ADMIN_SECRET_CODE || '271211'
   };
+
+  console.log('🛡️ Admin Credentials loaded:', {
+    username: ADMIN_CREDENTIALS.username,
+    hasPassword: !!ADMIN_CREDENTIALS.password,
+    secretCode: ADMIN_CREDENTIALS.secretCode
+  });
 
   // GitHub Configuration
   const githubToken = process.env.GITHUB_TOKEN;
@@ -33,6 +45,7 @@ async function startServer() {
 
   // API Routes
   app.post("/api/admin/save-products", async (req, res) => {
+    console.log('📥 Received save-products request');
     const { username, password, secretCode, products } = req.body;
 
     // Verify Credentials
@@ -41,25 +54,36 @@ async function startServer() {
       password !== ADMIN_CREDENTIALS.password || 
       secretCode !== ADMIN_CREDENTIALS.secretCode
     ) {
-      console.warn('❌ Unauthorized access attempt:', { username, providedPin: secretCode });
-      return res.status(401).json({ success: false, message: "Unauthorized: Invalid credentials or PIN. Try logging out and back in." });
+      console.warn('❌ Unauthorized access attempt:', { 
+        providedUsername: username, 
+        expectedUsername: ADMIN_CREDENTIALS.username,
+        providedPin: secretCode,
+        expectedPin: ADMIN_CREDENTIALS.secretCode
+      });
+      return res.status(401).json({ success: false, message: "Unauthorized: Invalid credentials or PIN." });
     }
 
     if (!Array.isArray(products)) {
-      return res.status(400).json({ success: false, message: "Invalid data" });
+      console.error('❌ Products is not an array:', typeof products);
+      return res.status(400).json({ success: false, message: "Invalid data format: products must be an array" });
     }
 
     const content = JSON.stringify(products, null, 2);
 
     try {
       // 1. Local Persistence (for development/AI Studio)
-      const dataPath = path.join(process.cwd(), 'src', 'products.json');
-      fs.writeFileSync(dataPath, content, 'utf8');
-      console.log('✅ Local file updated: src/products.json');
+      try {
+        const dataPath = path.join(process.cwd(), 'src', 'products.json');
+        fs.writeFileSync(dataPath, content, 'utf8');
+        console.log('✅ Local file updated: src/products.json');
+      } catch (fsError: any) {
+        console.warn('⚠️ Local filesystem write failed (likely read-only/prod):', fsError.message);
+        // Continue to GitHub sync if local fails (e.g. on serverless)
+      }
 
       // 2. GitHub Persistence (if configured)
       if (githubToken && githubOwner && githubRepo) {
-        console.log('🚀 Attempting GitHub Sync...');
+        console.log(`🚀 Attempting GitHub Sync to ${githubOwner}/${githubRepo}...`);
         const octokit = new Octokit({ auth: githubToken });
         const filePath = 'src/products.json';
 
@@ -74,8 +98,9 @@ async function startServer() {
               ref: githubBranch
             });
             if (!Array.isArray(data)) sha = data.sha;
+            console.log('📄 Found existing file on GitHub, sha:', sha);
           } catch (e) {
-            console.log('Creating new file on GitHub...');
+            console.log('📄 File not found on github, will create new one');
           }
 
           await octokit.repos.createOrUpdateFileContents({
@@ -88,16 +113,18 @@ async function startServer() {
             branch: githubBranch
           });
           console.log('✅ GitHub Repo updated successfully');
-        } catch (ghError) {
-          console.error('❌ GitHub Sync Error:', ghError);
-          // Don't fail the whole request if GitHub sync fails but local write worked
+        } catch (ghError: any) {
+          console.error('❌ GitHub Sync Error:', ghError.message);
+          return res.status(500).json({ success: false, message: `GitHub Sync Failed: ${ghError.message}` });
         }
+      } else {
+        console.log('ℹ️ GitHub Sync skipped (missing config)');
       }
 
       res.json({ success: true, message: "Changes saved successfully" });
-    } catch (error) {
-      console.error('❌ Error saving products:', error);
-      res.status(500).json({ success: false, message: "Error saving changes" });
+    } catch (error: any) {
+      console.error('❌ Unexpected error saving products:', error);
+      res.status(500).json({ success: false, message: `Server Error: ${error.message}` });
     }
   });
 
