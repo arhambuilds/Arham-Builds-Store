@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-primary: #ff014f;
+  --color-secondary: #f4f5f8;
+  --color-dark: #1e2125;
+  --color-body: #3c3e41;
+  --color-heading: #1e2125;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  html::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+  
+  body {
+    @apply bg-secondary text-body font-sans overflow-x-hidden;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  body::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display text-heading font-bold;
+  }
+}
+
+/* Define custom utility classes directly */
+.card-shadow {
+  box-shadow: 10px 10px 19px #d1d9e6, -10px -10px 19px #ffffff;
+}
+
+.card-shadow-inset {
+  box-shadow: inset 10px 10px 19px #d1d9e6, inset -10px -10px 19px #ffffff;
+}
+
+@layer components {
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12;
+  }
+  
+  .btn-primary {
+    @apply bg-primary text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg active:translate-y-0 active:shadow-md;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary text-primary font-semibold py-3 px-8 rounded-lg transition-all duration-300 transform hover:-translate-y-1 hover:bg-white active:translate-y-0;
+    box-shadow: 10px 10px 19px #d1d9e6, -10px -10px 19px #ffffff;
+  }
+
+  .nav-link {
+    @apply text-body font-medium transition-colors duration-300 hover:text-primary uppercase text-sm tracking-widest;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .custom-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-shimmer {
+  animation: shimmer 10s infinite linear;
+}
+
+@keyframes shimmer-fast {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer-fast {
+  animation: shimmer-fast 3s infinite linear;
+}
+
+
