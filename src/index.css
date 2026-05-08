@@ -82,6 +82,11 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  .optimize-gpu {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+  }
 }
 
 @keyframes shimmer {

@@ -93,7 +93,7 @@ export default function Navbar() {
         <nav 
           className={cn(
             "flex items-center gap-1 p-0.5 rounded-full border shadow-xl transition-all duration-500",
-            "bg-white backdrop-blur-xl border-primary/20"
+            "bg-white/95 backdrop-blur-md border-primary/20"
           )}
         >
           {/* Left Profile/Brand Area */}
