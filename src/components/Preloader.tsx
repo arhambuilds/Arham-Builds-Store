@@ -13,7 +13,7 @@ export default function Preloader() {
     if (!hasSeenPreloader) {
       setIsVisible(true);
       
-      // Show for 2 seconds
+      // Show for 3 seconds
       const timer = setTimeout(() => {
         setIsVisible(false);
         // Delay setting finished to allow exit animation
@@ -21,7 +21,7 @@ export default function Preloader() {
           setIsFinished(true);
           localStorage.setItem('arham_preloader_seen', 'true');
         }, 800);
-      }, 2000);
+      }, 3000);
 
       return () => clearTimeout(timer);
     } else {
@@ -51,11 +51,11 @@ export default function Preloader() {
               className="absolute w-24 h-24 bg-primary/20 rounded-full blur-2xl"
             />
             
-            {/* The Store Icon with rotation and pulse */}
+            {/* The Store Icon with pulse */}
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ 
-                scale: [0.8, 1, 0.8],
+                scale: [0.8, 1.05, 0.8],
                 opacity: 1
               }}
               transition={{ 
@@ -64,34 +64,8 @@ export default function Preloader() {
               }}
               className="relative text-primary"
             >
-              <ShoppingBag size={48} strokeWidth={1.5} />
+              <ShoppingBag size={64} strokeWidth={1.5} />
             </motion.div>
-
-            {/* Circular progress orbit */}
-            <svg className="absolute w-32 h-32 -rotate-90">
-              <motion.circle
-                cx="64"
-                cy="64"
-                r="60"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="text-primary/10"
-              />
-              <motion.circle
-                cx="64"
-                cy="64"
-                r="60"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeDasharray="377"
-                initial={{ strokeDashoffset: 377 }}
-                animate={{ strokeDashoffset: 0 }}
-                transition={{ duration: 2, ease: "easeInOut" }}
-                className="text-primary"
-              />
-            </svg>
           </div>
         </motion.div>
       )}
