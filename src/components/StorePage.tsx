@@ -6,7 +6,7 @@ export default function StorePage() {
       title="TEMPLATE STORE"
       subtitle="Premium Digital Solutions"
       description="Premium website templates designed for special moments and unique visions."
-      excludeCategories={['Freebies', 'Editing Assets']}
+      excludeSections={['Freebies', 'Editing Assets']}
     />
   );
 }

@@ -8,12 +8,11 @@ import {
 } from 'lucide-react';
 import React, { useEffect, useState, useRef, type MouseEvent } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { type Product } from '../data';
+import { PRODUCTS, type Product } from '../data';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { cn } from '../lib/utils';
 import { ProductCard } from './Store';
-import { useData } from '../lib/data-manager';
 
 interface InteractiveProps {
   feature: { name: string; description: string };
@@ -64,7 +63,6 @@ const InteractiveFeature = ({ feature }: InteractiveProps) => {
 export default function ProductDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { PRODUCTS } = useData();
   const [product, setProduct] = useState<Product | null>(null);
   const [isRevealed, setIsRevealed] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -344,10 +342,12 @@ export default function ProductDetailPage() {
               isRevealed ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
             )}>
               <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <span className="px-3 py-1 rounded-lg border border-primary/20 bg-primary/5 text-primary text-[9px] font-black uppercase tracking-widest">
-                    {product.category}
-                  </span>
+                <div className="flex items-center gap-2 flex-wrap">
+                  {product.categories.map((cat, i) => (
+                    <span key={i} className="px-3 py-1 rounded-lg border border-primary/20 bg-primary/5 text-primary text-[9px] font-black uppercase tracking-widest">
+                      {cat}
+                    </span>
+                  ))}
                   {isLowStock && !isOutOfStock && (
                     <span className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-orange-500/10 text-orange-600 text-[9px] font-black uppercase tracking-wider border border-orange-500/20 animate-pulse">
                       <AlertCircle size={10} /> Only {product.stockCount} left

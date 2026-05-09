@@ -2,12 +2,11 @@ import { motion } from 'motion/react';
 import { useEffect } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import { PRIVACY_POLICY } from '../data';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useData } from '../lib/data-manager';
 
 export default function PrivacyPolicyPage() {
-  const { PRIVACY_POLICY } = useData();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);

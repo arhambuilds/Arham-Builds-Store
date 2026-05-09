@@ -1,12 +1,11 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu as MenuIcon, X, Briefcase, Calendar, Moon, Sun, User, ArrowRight, ChevronDown, Lock } from 'lucide-react';
+import { Menu as MenuIcon, X, Briefcase, Calendar, Moon, Sun, User, ArrowRight, ChevronDown } from 'lucide-react';
 import { useState, useEffect, MouseEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
-import { useData } from '../lib/data-manager';
+import { NAV_LINKS } from '../data';
 
 export default function Navbar() {
-  const { CONTACT_INFO, NAV_LINKS, HERO_DATA } = useData();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
@@ -256,11 +255,11 @@ export default function Navbar() {
                   <div className="space-y-6 border-l-4 border-primary/10 pl-8">
                      <div className="space-y-1">
                         <span className="text-[10px] font-bold uppercase tracking-widest text-primary/40">Email</span>
-                        <p className="text-lg font-black text-heading text-pretty">{CONTACT_INFO.email}</p>
+                        <p className="text-lg font-black text-heading text-pretty">bussiness@arhamadib.in</p>
                      </div>
                      <div className="space-y-1">
                         <span className="text-[10px] font-bold uppercase tracking-widest text-primary/40">Location</span>
-                        <p className="text-lg font-black text-heading">{CONTACT_INFO.address}</p>
+                        <p className="text-lg font-black text-heading">Kishanganj, Bihar, India</p>
                      </div>
                   </div>
                   <Link 

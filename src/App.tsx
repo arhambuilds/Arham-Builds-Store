@@ -24,9 +24,6 @@ import TermsConditionsPage from './components/TermsConditionsPage';
 import FreebiesPage from './components/FreebiesPage';
 import FAQ from './components/FAQ';
 import About from './components/About';
-import AdminLogin from './components/AdminLogin';
-import AdminDashboard from './components/AdminDashboard';
-import { DataProvider } from './lib/data-manager';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -53,7 +50,7 @@ function Home() {
           id="store"
           title="Premium Templates"
           description="Everything you need to give the best gifts effortlessly"
-          category="Templates"
+          section="Templates"
           viewAllLink="/premium-templates"
           viewAllText="Explore Store"
         />
@@ -61,7 +58,7 @@ function Home() {
           id="editing-assets"
           title="Editing Assets"
           description="Professional SFX packs, animations, and transitions for creators"
-          category="Editing Assets"
+          section="Editing Assets"
           viewAllLink="/editing-assets"
           viewAllText="View All Assets"
         />
@@ -69,7 +66,7 @@ function Home() {
           id="freebies"
           title="Freebies"
           description="High-quality resources available for free to help your projects"
-          category="Freebies"
+          section="Freebies"
           viewAllLink="/freebies"
           viewAllText="Browse Freebies"
         />
@@ -85,32 +82,28 @@ function Home() {
 
 export default function App() {
   return (
-    <DataProvider>
-      <Router>
-        <div className="min-h-screen bg-secondary selection:bg-primary/10 selection:text-primary">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/store" element={<StorePage />} />
-            <Route path="/premium-templates" element={<StorePage />} />
-            <Route path="/premium-templates/:id" element={<TemplateDetailPage />} />
-            <Route path="/editing-assets" element={<AssetsPage />} />
-            <Route path="/editing-assets/:id" element={<AssetDetailPage />} />
-            <Route path="/freebies" element={<FreebiesPage />} />
-            <Route path="/freebies/:id" element={<FreebieDetailPage />} />
-            <Route path="/store/:id" element={<ProductDetailPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/faq" element={<FAQPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-            <Route path="/terms-conditions" element={<TermsConditionsPage />} />
-            <Route path="/freebies" element={<FreebiesPage />} />
-            <Route path="/admin" element={<AdminLogin />} />
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          </Routes>
-        </div>
-      </Router>
-    </DataProvider>
+    <Router>
+      <div className="min-h-screen bg-secondary selection:bg-primary/10 selection:text-primary">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/store" element={<StorePage />} />
+          <Route path="/premium-templates" element={<StorePage />} />
+          <Route path="/premium-templates/:id" element={<TemplateDetailPage />} />
+          <Route path="/editing-assets" element={<AssetsPage />} />
+          <Route path="/editing-assets/:id" element={<AssetDetailPage />} />
+          <Route path="/freebies" element={<FreebiesPage />} />
+          <Route path="/freebies/:id" element={<FreebieDetailPage />} />
+          <Route path="/store/:id" element={<ProductDetailPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/faq" element={<FAQPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms-conditions" element={<TermsConditionsPage />} />
+          <Route path="/freebies" element={<FreebiesPage />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

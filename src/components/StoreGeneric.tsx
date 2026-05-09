@@ -1,13 +1,12 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { Search, SlidersHorizontal, ArrowLeft, X, Check, RefreshCcw, Sparkles, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useNavigate } from 'react-router-dom';
-import { Product } from '../data';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { PRODUCTS, Product } from '../data';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { ProductCard } from './Store';
 import { cn } from '../lib/utils';
-import { useData } from '../lib/data-manager';
 
 const StoreDecoration = () => {
   const storeHearts = [
@@ -50,24 +49,25 @@ interface StoreGenericProps {
   title: string;
   subtitle: string;
   description: string;
-  allowedCategories?: string[];
-  excludeCategories?: string[];
+  allowedSections?: ('Templates' | 'Freebies' | 'Editing Assets')[];
+  excludeSections?: ('Templates' | 'Freebies' | 'Editing Assets')[];
 }
 
 export default function StoreGeneric({ 
   title, 
   subtitle, 
   description, 
-  allowedCategories, 
-  excludeCategories 
+  allowedSections, 
+  excludeSections 
 }: StoreGenericProps) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const categoryParam = searchParams.get('category');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All Products');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
-  const { PRODUCTS } = useData();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -77,32 +77,41 @@ export default function StoreGeneric({
 
   const baseProducts = useMemo(() => {
     let list = PRODUCTS;
-    if (allowedCategories) {
-      list = list.filter(p => allowedCategories.includes(p.category));
+    if (allowedSections) {
+      list = list.filter(p => allowedSections.includes(p.section));
     }
-    if (excludeCategories) {
-      list = list.filter(p => !excludeCategories.includes(p.category));
+    if (excludeSections) {
+      list = list.filter(p => !excludeSections.includes(p.section));
     }
     return list;
-  }, [allowedCategories, excludeCategories]);
+  }, [allowedSections, excludeSections]);
 
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {
       'All Products': baseProducts.length
     };
     baseProducts.forEach(p => {
-      counts[p.category] = (counts[p.category] || 0) + 1;
+      p.categories.forEach(cat => {
+        counts[cat] = (counts[cat] || 0) + 1;
+      });
     });
     return counts;
   }, [baseProducts]);
 
   const categories = useMemo(() => Object.keys(categoryCounts), [categoryCounts]);
 
+  // Handle URL category param
+  useEffect(() => {
+    if (categoryParam && categories.includes(categoryParam)) {
+      setActiveCategory(categoryParam);
+    }
+  }, [categoryParam, categories]);
+
   const filteredProducts = useMemo(() => {
     return baseProducts.filter(product => {
       const matchesSearch = product.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                             product.description.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = activeCategory === 'All Products' || product.category === activeCategory;
+      const matchesCategory = activeCategory === 'All Products' || product.categories.includes(activeCategory);
       return matchesSearch && matchesCategory;
     });
   }, [baseProducts, searchQuery, activeCategory]);

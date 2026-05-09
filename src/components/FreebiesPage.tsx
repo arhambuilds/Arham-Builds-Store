@@ -6,7 +6,7 @@ export default function FreebiesPage() {
       title="FREEBIES STORE"
       subtitle="Gifts from Arham"
       description="High-quality digital resources available for free to help your projects thrive."
-      allowedCategories={['Freebies']}
+      allowedSections={['Freebies']}
     />
   );
 }

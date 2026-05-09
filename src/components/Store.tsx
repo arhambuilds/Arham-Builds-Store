@@ -2,15 +2,14 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ArrowRight, Flame, TrendingUp, Sparkles, AlertCircle, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState, useRef } from 'react';
-import { type Product } from '../data';
+import { PRODUCTS, type Product } from '../data';
 import { cn } from '../lib/utils';
-import { useData } from '../lib/data-manager';
 
 interface ProductSectionProps {
   id: string;
   title: string;
   description: string;
-  category: string;
+  section: string;
   itemsToShow?: number;
   viewAllLink: string;
   viewAllText: string;
@@ -20,20 +19,19 @@ export default function ProductSection({
   id, 
   title, 
   description, 
-  category, 
+  section, 
   itemsToShow = 5,
   viewAllLink,
   viewAllText
 }: ProductSectionProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showScrollHint, setShowScrollHint] = useState(true);
-  const { PRODUCTS } = useData();
 
-  const filteredProducts = category === 'Templates'
-    ? PRODUCTS.filter(p => p.category !== 'Freebies' && p.category !== 'Editing Assets')
-    : category === 'All'
+  const filteredProducts = section === 'Templates'
+    ? PRODUCTS.filter(p => p.section === 'Templates')
+    : section === 'All'
       ? PRODUCTS
-      : PRODUCTS.filter(p => p.category === category);
+      : PRODUCTS.filter(p => p.section === section);
 
   const handleScroll = () => {
     if (scrollContainerRef.current && scrollContainerRef.current.scrollLeft > 20) {
@@ -168,7 +166,7 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
   };
 
   const getDetailRoute = (p: Product) => {
-    switch (p.category) {
+    switch (p.section) {
       case 'Templates': return `/premium-templates/${p.id}`;
       case 'Editing Assets': return `/editing-assets/${p.id}`;
       case 'Freebies': return `/freebies/${p.id}`;
@@ -236,9 +234,13 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
       
       <div className="p-6 flex-grow flex flex-col">
         <div className="mb-3">
-           <span className="inline-block px-3 py-1 rounded-lg border border-primary/20 bg-primary/5 text-primary text-[9px] font-black uppercase tracking-[0.2em] mb-3">
-             {product.category}
-           </span>
+           <div className="flex flex-wrap gap-2 mb-3">
+             {product.categories.map((cat, i) => (
+               <span key={i} className="inline-block px-3 py-1 rounded-lg border border-primary/20 bg-primary/5 text-primary text-[9px] font-black uppercase tracking-[0.2em]">
+                 {cat}
+               </span>
+             ))}
+           </div>
            <Link to={detailRoute} className="block">
              <h3 className="text-lg font-black text-heading group-hover:text-primary transition-colors leading-tight mb-1 uppercase tracking-tighter">
                {product.title}
