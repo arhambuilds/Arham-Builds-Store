@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu as MenuIcon, X, ShoppingBag, Calendar, Moon, Sun, User, ArrowRight, ChevronDown } from 'lucide-react';
+import { Menu as MenuIcon, X, Briefcase, Calendar, Moon, Sun, User, ArrowRight, ChevronDown } from 'lucide-react';
 import { useState, useEffect, MouseEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
@@ -73,6 +73,15 @@ export default function Navbar() {
     setExpandedSection(expandedSection === section ? null : section);
   };
 
+  const DESKTOP_NAV = [
+    { name: 'Home', href: '/home' },
+    { name: 'Templates', href: '/premium-templates' },
+    { name: 'Assets', href: '/editing-assets' },
+    { name: 'Freebies', href: '/freebies' },
+    { name: 'FAQs', href: '/faq' },
+    { name: 'Contact', href: '/contact' },
+  ];
+
   return (
     <>
       <header
@@ -84,7 +93,7 @@ export default function Navbar() {
         <nav 
           className={cn(
             "flex items-center gap-1 p-0.5 rounded-full border shadow-xl transition-all duration-500",
-            "bg-white backdrop-blur-xl border-primary/20"
+            "bg-white/95 backdrop-blur-md border-primary/20"
           )}
         >
           {/* Left Profile/Brand Area */}
@@ -99,43 +108,31 @@ export default function Navbar() {
                  className="w-full h-full object-cover"
                />
             </div>
-            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary whitespace-nowrap">Arham Adib</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary whitespace-nowrap">Arham Builds</span>
           </Link>
 
-          {/* Targeted 6 Links for Navbar */}
-          <div className="hidden lg:flex items-center gap-0.5 px-2">
-            {NAV_LINKS.filter(link => ['Home', 'Portfolio', 'Store', 'Pricing', 'Blog', 'Contact'].includes(link.name)).map((link) => {
-              const isPortfolio = location.pathname.startsWith('/portfolio');
-              const isStore = location.pathname.startsWith('/store');
-              const isPricing = location.pathname.startsWith('/pricing');
-              const isBlog = location.pathname.startsWith('/blog');
-              const isContact = location.pathname.startsWith('/contact');
+          {/* Targeted Links for Navbar */}
+          <div className="hidden lg:flex items-center gap-0.5 px-2 relative">
+            {DESKTOP_NAV.map((link) => {
+              const isActive = location.pathname === link.href || (link.href === '/home' && location.pathname === '/');
               
-              let isActive = false;
-              if (link.name === 'Home') {
-                isActive = (location.pathname === '/' || location.pathname === '/home') || (!isPortfolio && !isStore && !isPricing && !isBlog && !isContact);
-              } else if (link.name === 'Portfolio') {
-                isActive = isPortfolio;
-              } else if (link.name === 'Store') {
-                isActive = isStore;
-              } else if (link.name === 'Pricing') {
-                isActive = isPricing;
-              } else if (link.name === 'Blog') {
-                isActive = isBlog;
-              } else if (link.name === 'Contact') {
-                isActive = isContact;
-              }
-
               return (
                 <Link
                   key={link.name}
                   to={link.href}
                   onClick={(e) => handleNavClick(e, link.href)}
                   className={cn(
-                    "px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 rounded-full",
-                    isActive ? "text-primary bg-primary/5" : "text-body/70 hover:text-primary hover:bg-primary/5"
+                    "relative px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-300 rounded-full",
+                    isActive ? "text-primary" : "text-body/70 hover:text-primary"
                   )}
                 >
+                  {isActive && (
+                    <motion.div
+                      layoutId="nav-pill"
+                      className="absolute inset-0 bg-primary/5 rounded-full -z-10"
+                      transition={{ type: "spring", bounce: 0.15, duration: 0.6 }}
+                    />
+                  )}
                   {link.name}
                 </Link>
               );
@@ -144,12 +141,14 @@ export default function Navbar() {
 
           {/* Right Icons & Hamburger */}
           <div className="flex items-center gap-0.5 pl-2 pr-1">
-            <Link 
-              to="/store"
+            <a 
+              href="https://arhamadib.in"
+              target="_blank"
+              rel="noopener noreferrer"
               className="p-2.5 rounded-full hover:bg-primary/5 text-primary/60 hover:text-primary transition-all"
             >
-              <ShoppingBag size={16} />
-            </Link>
+              <Briefcase size={16} />
+            </a>
             <button
               onClick={() => setIsMenuOpen(true)}
               className="p-2.5 rounded-full bg-primary text-white border border-primary/20 hover:bg-primary/90 transition-all flex items-center justify-center ml-1 shadow-lg shadow-primary/20"
@@ -179,7 +178,7 @@ export default function Navbar() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <span className="text-lg font-black uppercase tracking-tighter text-primary">Arham Adib</span>
+                  <span className="text-lg font-black uppercase tracking-tighter text-primary">Arham Builds</span>
                </div>
                <button 
                  onClick={() => setIsMenuOpen(false)}
@@ -191,28 +190,9 @@ export default function Navbar() {
 
             <div className="max-w-7xl mx-auto px-8 py-10 grid lg:grid-cols-2 gap-20 h-[calc(100vh-80px)] overflow-y-auto no-scrollbar">
                <div className="flex flex-col">
-                {NAV_LINKS.filter(l => !['Hire Me'].includes(l.name)).map((link, i) => {
-                  const isPortfolio = location.pathname.startsWith('/portfolio');
-                  const isStore = location.pathname.startsWith('/store');
-                  const isPricing = location.pathname.startsWith('/pricing');
-                  const isBlog = location.pathname.startsWith('/blog');
-                  const isContact = location.pathname.startsWith('/contact');
+                {NAV_LINKS.map((link, i) => {
+                  const isActive = location.pathname === link.href || (link.href === '/home' && location.pathname === '/');
                   
-                  let isActive = false;
-                  if (link.name === 'Home') {
-                    isActive = (location.pathname === '/' || location.pathname === '/home') || (!isPortfolio && !isStore && !isPricing && !isBlog && !isContact);
-                  } else if (link.name === 'Portfolio') {
-                    isActive = isPortfolio;
-                  } else if (link.name === 'Store') {
-                    isActive = isStore;
-                  } else if (link.name === 'Pricing') {
-                    isActive = isPricing;
-                  } else if (link.name === 'Blog') {
-                    isActive = isBlog;
-                  } else if (link.name === 'Contact') {
-                    isActive = isContact;
-                  }
-
                   return (
                     <motion.div
                       key={link.name}
@@ -227,10 +207,12 @@ export default function Navbar() {
                             onClick={() => toggleSection('store')}
                             className={cn(
                               "text-lg md:text-xl font-black uppercase tracking-tighter transition-all duration-300 flex items-center justify-between py-3 w-full group",
-                              isActive ? "text-primary" : "text-heading hover:text-primary"
+                              isActive || location.pathname === '/premium-templates' || location.pathname === '/editing-assets' || location.pathname === '/freebies' 
+                                ? "text-primary" 
+                                : "text-heading hover:text-primary"
                             )}
                           >
-                            <span className="group-hover:translate-x-2 transition-transform">{link.name}</span>
+                            <span className="transition-transform">{link.name}</span>
                             <ChevronDown size={18} className={cn("transition-transform duration-300", expandedSection === 'store' ? "rotate-180" : "")} />
                           </button>
                           <AnimatePresence>
@@ -242,23 +224,32 @@ export default function Navbar() {
                                 className="overflow-hidden bg-primary/5 rounded-xl mb-3"
                               >
                                 <div className="flex flex-col p-4 gap-3">
-                                  <Link to="/store" onClick={() => setIsMenuOpen(false)} className={cn("text-sm font-bold uppercase tracking-widest transition-colors", location.pathname === '/store' ? "text-primary" : "text-body/60 hover:text-primary")}>All Products</Link>
+                                  <Link to="/premium-templates" onClick={() => setIsMenuOpen(false)} className={cn("text-sm font-bold uppercase tracking-widest transition-colors", location.pathname === '/premium-templates' ? "text-primary" : "text-body/60 hover:text-primary")}>Templates</Link>
+                                  <Link to="/editing-assets" onClick={() => setIsMenuOpen(false)} className={cn("text-sm font-bold uppercase tracking-widest transition-colors", location.pathname === '/editing-assets' ? "text-primary" : "text-body/60 hover:text-primary")}>Editing Assets</Link>
                                   <Link to="/freebies" onClick={() => setIsMenuOpen(false)} className={cn("text-sm font-bold uppercase tracking-widest transition-colors", location.pathname === '/freebies' ? "text-primary" : "text-body/60 hover:text-primary")}>Freebies</Link>
-                                  <Link to="/store" onClick={() => setIsMenuOpen(false)} className="text-sm font-bold uppercase tracking-widest text-body/60 hover:text-primary transition-colors">New Arrivals</Link>
-                                  <Link to="/store" onClick={() => setIsMenuOpen(false)} className="text-sm font-bold uppercase tracking-widest text-body/60 hover:text-primary transition-colors">Best Sellers</Link>
-                                  <Link to="/store" onClick={() => setIsMenuOpen(false)} className="text-sm font-bold uppercase tracking-widest text-body/60 hover:text-primary transition-colors">Arham Builds.</Link>
                                 </div>
                               </motion.div>
                             )}
                           </AnimatePresence>
                         </div>
+                      ) : link.name === 'Portfolio' ? (
+                        <a
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={cn(
+                            "text-lg md:text-xl font-black uppercase tracking-tighter transition-all duration-300 inline-block py-3 w-full text-heading hover:text-primary"
+                          )}
+                        >
+                          {link.name}
+                        </a>
                       ) : (
                         <Link
                           to={link.href}
                           onClick={(e) => handleNavClick(e, link.href)}
                           className={cn(
                             "text-lg md:text-xl font-black uppercase tracking-tighter transition-all duration-300 inline-block py-3 w-full",
-                            isActive ? "text-primary translate-x-4" : "text-heading hover:text-primary hover:translate-x-4"
+                            isActive ? "text-primary" : "text-heading hover:text-primary"
                           )}
                         >
                           {link.name}
@@ -297,7 +288,7 @@ export default function Navbar() {
 
             {/* Backdrop Logo/Background */}
             <div className="absolute bottom-[-10%] right-[-5%] text-[20vw] font-black text-primary/5 select-none pointer-events-none uppercase">
-              Arham Adib
+              Arham Builds
             </div>
           </motion.div>
         )}
