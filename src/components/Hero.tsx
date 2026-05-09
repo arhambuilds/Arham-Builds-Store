@@ -57,7 +57,7 @@ const PremiumDecoration = () => {
         </motion.div>
       ))}
       
-      <div className="absolute top-[40%] left-[10%] opacity-10 dark:opacity-5 animate-spin-slow">
+      <div className="absolute top-[40%] left-[10%] opacity-10 animate-spin-slow">
         <Box size={40} className="text-primary" strokeWidth={1} />
       </div>
 
@@ -113,7 +113,7 @@ const Hero: React.FC<HeroProps> = ({ onExplore, onCategorySelect }) => {
 
   return (
     <section id="home" className="relative pt-32 pb-20 overflow-hidden bg-secondary transition-colors">
-      <div className="absolute inset-0 opacity-[0.2] dark:opacity-[0.05] pointer-events-none" 
+      <div className="absolute inset-0 opacity-[0.2] pointer-events-none" 
            style={{ backgroundImage: 'radial-gradient(rgba(0,0,0,0.15) 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
       <PremiumDecoration />
       
@@ -128,7 +128,7 @@ const Hero: React.FC<HeroProps> = ({ onExplore, onCategorySelect }) => {
             className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left"
           >
             <motion.div variants={itemVariants} className="mb-6">
-              <div className="inline-flex items-center gap-2 bg-white/50 dark:bg-white/5 px-3 py-1.5 rounded-full card-shadow backdrop-blur-sm border border-white">
+              <div className="inline-flex items-center gap-2 bg-white/50 px-3 py-1.5 rounded-full card-shadow backdrop-blur-sm border border-white">
                 <span className="bg-gradient-to-r from-primary to-[#ff512f] text-white text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-widest">India&apos;s #1</span>
                 <span className="text-[10px] font-bold text-body/60 uppercase tracking-widest">Premium Store</span>
               </div>
@@ -173,7 +173,7 @@ const Hero: React.FC<HeroProps> = ({ onExplore, onCategorySelect }) => {
                 <div className="flex flex-col items-center gap-8">
                   <button 
                     onClick={() => setShowHowItWorks(true)}
-                    className="flex items-center gap-3 px-8 py-3 bg-[#f0f2f5] dark:bg-white/5 rounded-full text-[10px] font-black text-heading hover:bg-white dark:hover:bg-white/10 transition-all shadow-sm uppercase tracking-widest group"
+                    className="flex items-center gap-3 px-8 py-3 bg-[#f0f2f5] rounded-full text-[10px] font-black text-heading hover:bg-white transition-all shadow-sm uppercase tracking-widest group"
                   >
                     HOW IT WORKS
                     <div className="w-5 h-5 rounded-full border border-heading flex items-center justify-center">
@@ -346,7 +346,7 @@ const Hero: React.FC<HeroProps> = ({ onExplore, onCategorySelect }) => {
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="relative w-full max-w-lg bg-white dark:bg-dark rounded-[2.5rem] shadow-2xl overflow-hidden p-8 md:p-10"
+              className="relative w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl overflow-hidden p-8 md:p-10"
             >
               <button 
                 onClick={() => setShowHowItWorks(false)}
@@ -392,11 +392,11 @@ const Hero: React.FC<HeroProps> = ({ onExplore, onCategorySelect }) => {
                 </div>
               </div>
 
-              <div className="mt-10 p-4 bg-emerald-50 dark:bg-emerald-500/10 rounded-2xl border border-emerald-100 dark:border-emerald-500/20 flex items-center gap-3">
+              <div className="mt-10 p-4 bg-emerald-50 rounded-2xl border border-emerald-100 flex items-center gap-3">
                 <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-white">
                   <Check size={12} strokeWidth={4} />
                 </div>
-                <p className="text-[10px] font-bold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider leading-tight">
+                <p className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider leading-tight">
                   Delivery guarantee starts instantly after form submission. Priority support is active 24/7.
                 </p>
               </div>

@@ -8,18 +8,9 @@ import { NAV_LINKS } from '../data';
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isDark, setIsDark] = useState(false);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDark]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -82,6 +73,8 @@ export default function Navbar() {
     { name: 'Contact', href: '/contact' },
   ];
 
+  const LOGO_URL = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj_k4CqxRUYByW2SZXhkby2AxlfiQFsW6jm-KFzlA__1go2Lmu1AxA8hgyXDpEHwxyeBCRbpelQeIJnBfwPCzEhOeXxEUmoCiogiJxr-MwMahQymXwnoy5peuHdUGNlPAXXFzgtx4R3udF4oV20QdEFrfki71UE59XvuI5RDeGk26MkdNlRFMiz6nzqTw/s320/ArhamBuildsLogo.png";
+
   return (
     <>
       <header
@@ -93,7 +86,7 @@ export default function Navbar() {
         <nav 
           className={cn(
             "flex items-center gap-1 p-0.5 rounded-full border shadow-xl transition-all duration-500",
-            "bg-white backdrop-blur-xl border-primary/20"
+            "bg-white/95 backdrop-blur-xl border-primary/20"
           )}
         >
           {/* Left Profile/Brand Area */}
@@ -103,9 +96,9 @@ export default function Navbar() {
           >
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 transition-all overflow-hidden font-black text-primary shadow-lg shadow-primary/10 group-hover:scale-105">
                <img 
-                 src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgV4_PzmTUKmZfLipz0IZOO5cMvwqNvfX1zIQrv19tqdMzCd3qNRmbcqgLzeY-nfdCl-Y_3KbaToX3lLgamK1wbKH9We_0RdavOm4Ci24K6cVz0RorQK95k8aGSdh2lRMz0pyCdoVzKYFgN0cQQwerenIipHrNAYHDa2h61HIejBn07XpGX3SxOHnj9JA/s320/Arham-Adib-Logo.jpg" 
+                 src={LOGO_URL} 
                  alt="Profile" 
-                 className="w-full h-full object-cover"
+                 className="w-full h-full object-cover scale-110"
                />
             </div>
             <span className="text-[10px] font-black uppercase tracking-[0.25em] text-primary whitespace-nowrap">Arham Builds</span>
@@ -138,13 +131,13 @@ export default function Navbar() {
               href="https://arhamadib.in"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2.5 rounded-full hover:bg-primary/5 text-primary/60 hover:text-primary transition-all"
+              className="hidden sm:flex p-2.5 rounded-full hover:bg-primary/5 text-primary/60 hover:text-primary transition-all"
             >
-              <Briefcase size={16} />
+              <Briefcase size={16} strokeWidth={1.5} />
             </a>
             <button
               onClick={() => setIsMenuOpen(true)}
-              className="p-2.5 rounded-full bg-primary text-white border border-primary/20 hover:bg-primary/90 transition-all flex items-center justify-center ml-1 shadow-lg shadow-primary/20"
+              className="p-2.5 rounded-full bg-primary text-white border border-primary/20 hover:bg-primary/90 transition-all flex items-center justify-center ml-1 shadow-lg shadow-primary/20 active:scale-95"
             >
               <MenuIcon size={18} />
             </button>
@@ -156,9 +149,10 @@ export default function Navbar() {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ x: '-100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '-100%', opacity: 0 }}
+            transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
             className="fixed inset-0 z-[100] bg-white"
           >
             {/* Menu Header with close button */}
@@ -166,18 +160,18 @@ export default function Navbar() {
                <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full overflow-hidden border border-primary/20">
                     <img 
-                      src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgV4_PzmTUKmZfLipz0IZOO5cMvwqNvfX1zIQrv19tqdMzCd3qNRmbcqgLzeY-nfdCl-Y_3KbaToX3lLgamK1wbKH9We_0RdavOm4Ci24K6cVz0RorQK95k8aGSdh2lRMz0pyCdoVzKYFgN0cQQwerenIipHrNAYHDa2h61HIejBn07XpGX3SxOHnj9JA/s320/Arham-Adib-Logo.jpg" 
+                      src={LOGO_URL} 
                       alt="Profile" 
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover scale-110"
                     />
                   </div>
                   <span className="text-lg font-black uppercase tracking-tighter text-primary">Arham Builds</span>
                </div>
                <button 
                  onClick={() => setIsMenuOpen(false)}
-                 className="p-3 rounded-full bg-primary text-white border border-primary/20 hover:bg-primary/90 transition-all group shadow-lg shadow-primary/20"
+                 className="p-2 text-heading transition-all active:scale-90"
                >
-                 <X size={20} className="group-hover:rotate-90 transition-transform duration-300" />
+                 <X size={32} strokeWidth={1} />
                </button>
             </div>
 
@@ -191,7 +185,7 @@ export default function Navbar() {
                       key={link.name}
                       initial={{ opacity: 0, x: -30 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.05 }}
+                      transition={{ delay: i * 0.05, duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
                       className="border-b border-primary/5 last:border-0"
                     >
                       {link.name === 'Store' ? (
@@ -261,7 +255,7 @@ export default function Navbar() {
                   <div className="space-y-6 border-l-4 border-primary/10 pl-8">
                      <div className="space-y-1">
                         <span className="text-[10px] font-bold uppercase tracking-widest text-primary/40">Email</span>
-                        <p className="text-lg font-black text-heading">bussiness@arhamadib.in</p>
+                        <p className="text-lg font-black text-heading text-pretty">bussiness@arhamadib.in</p>
                      </div>
                      <div className="space-y-1">
                         <span className="text-[10px] font-bold uppercase tracking-widest text-primary/40">Location</span>
@@ -280,8 +274,9 @@ export default function Navbar() {
             </div>
 
             {/* Backdrop Logo/Background */}
-            <div className="absolute bottom-[-10%] right-[-5%] text-[20vw] font-black text-primary/5 select-none pointer-events-none uppercase">
-              Arham Builds
+            <div className="absolute bottom-[5%] right-[4%] flex flex-col items-end text-right select-none pointer-events-none uppercase">
+              <span className="text-[16vw] sm:text-[20vw] leading-[0.75] font-black text-primary/5">ARHAM</span>
+              <span className="text-[16vw] sm:text-[20vw] leading-[0.75] font-black text-primary/5">BUILDS</span>
             </div>
           </motion.div>
         )}
