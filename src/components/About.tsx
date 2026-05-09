@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
+import { useData } from '../lib/data-manager';
 
 const PageDecoration = () => {
   const hearts = [
@@ -84,6 +85,7 @@ export default function About({ showBackLink = false, isFullPage = false }: { sh
   const [isMuted, setIsMuted] = useState(true);
   const sectionRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { HERO_DATA, CONTACT_INFO } = useData();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -156,29 +158,26 @@ export default function About({ showBackLink = false, isFullPage = false }: { sh
           <div className={`w-full lg:w-1/2 space-y-8 transition-all duration-700 delay-100 transform ${isVisible ? 'translate-y-0 opacity-100' : '-translate-x-6 opacity-0'}`}>
             <div className="space-y-4">
               <h2 className="text-4xl md:text-6xl font-black text-heading tracking-tighter leading-tight">
-                Arham <span className="text-primary italic font-serif">Builds.</span>
+                {HERO_DATA.name.split(' ')[0]} <span className="text-primary italic font-serif">{HERO_DATA.name.split(' ').slice(1).join(' ')}.</span>
               </h2>
               <div className="h-1.5 w-16 bg-primary rounded-full"></div>
             </div>
 
-            <div className="space-y-6 text-body/70 text-sm md:text-base leading-relaxed font-medium">
-              <p>
-                I’m Arhan Adib, a designer and developer with a passion for creating cinematic digital experiences. I believe that special moments deserve more than just a message; they deserve a masterpiece.
-              </p>
-              <p>
-                With over 2 years of professional exploration in web design and video editing, I focus on performance, aesthetics, and emotional impact. Every template is architected with care, ensuring your story is told through buttery-smooth animations and premium UI.
-              </p>
-            </div>
+              <div className="space-y-6 text-body/70 text-sm md:text-base leading-relaxed font-medium">
+                {HERO_DATA.description.split('\n\n').map((para, i) => (
+                  <p key={i}>{para}</p>
+                ))}
+              </div>
 
             <div className="flex flex-wrap gap-4 pt-4 border-t border-primary/5">
               <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-body/40">
                 <Globe size={14} className="text-blue-500" />
-                BAHADURGANJ, BIHAR
+                {CONTACT_INFO.address.toUpperCase()}
               </div>
               <div className="w-1 h-1 rounded-full bg-primary/20 self-center"></div>
               <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-body/40">
                 <Users size={14} className="text-blue-500" />
-                10+ VERIFIED CUSTOMERS
+                {HERO_DATA.roles.length > 0 ? "EXPERT CREATOR" : "VERIFIED CUSTOMER"}
               </div>
             </div>
           </div>

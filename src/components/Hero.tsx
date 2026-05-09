@@ -4,7 +4,7 @@ import {
   Star, Zap, Check, Copy, Sparkles, Box, Heart, Music, 
   Layout, Users, PlayCircle, CalendarHeart, Cake, ArrowRight, X 
 } from 'lucide-react';
-import { HERO_DATA, PRODUCTS } from '../data';
+import { useData } from '../lib/data-manager';
 
 interface HeroProps {
   onExplore?: () => void;
@@ -85,6 +85,7 @@ const PremiumDecoration = () => {
 const Hero: React.FC<HeroProps> = ({ onExplore, onCategorySelect }) => {
   const [copied, setCopied] = useState(false);
   const [showHowItWorks, setShowHowItWorks] = useState(false);
+  const { HERO_DATA, PRODUCTS } = useData();
 
   const handleCopy = () => {
     navigator.clipboard.writeText('TRYARHAM');

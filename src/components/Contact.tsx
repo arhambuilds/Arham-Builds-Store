@@ -1,8 +1,10 @@
 import { motion } from 'motion/react';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useData } from '../lib/data-manager';
 
 export default function Contact({ showFormOnMobile = false, isFullPage = false }: { showFormOnMobile?: boolean, isFullPage?: boolean }) {
+  const { CONTACT_INFO, HERO_DATA } = useData();
   return (
     <section id={isFullPage ? undefined : "contact"} className="bg-secondary">
       <div className={cn("section-container relative z-10", isFullPage ? "pt-2 md:pt-4" : "!pt-8 md:!pt-12")}>
@@ -28,7 +30,7 @@ export default function Contact({ showFormOnMobile = false, isFullPage = false }
           >
             <div className="rounded-2xl overflow-hidden aspect-[16/10]">
               <img
-                src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgV4_PzmTUKmZfLipz0IZOO5cMvwqNvfX1zIQrv19tqdMzCd3qNRmbcqgLzeY-nfdCl-Y_3KbaToX3lLgamK1wbKH9We_0RdavOm4Ci24K6cVz0RorQK95k8aGSdh2lRMz0pyCdoVzKYFgN0cQQwerenIipHrNAYHDa2h61HIejBn07XpGX3SxOHnj9JA/s320/Arham-Adib-Logo.jpg"
+                src={HERO_DATA.profileImage}
                 alt="Contact representation"
                 className="w-full h-full object-cover transition-all duration-500"
               />
@@ -45,17 +47,17 @@ export default function Contact({ showFormOnMobile = false, isFullPage = false }
               </p>
               
               <div className="space-y-4">
-                <a href="tel:+919296386448" className="flex items-center gap-4 text-body hover:text-primary transition-colors group">
+                <a href={`tel:${CONTACT_INFO.phone}`} className="flex items-center gap-4 text-body hover:text-primary transition-colors group">
                   <div className="w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center rounded-lg bg-secondary card-shadow group-hover:text-primary transition-all">
                     <Phone size={18} className="lg:size-5" />
                   </div>
-                  <span className="font-semibold text-sm lg:text-base">+91 9296 386 448</span>
+                  <span className="font-semibold text-sm lg:text-base">{CONTACT_INFO.phone}</span>
                 </a>
-                <a href="mailto:bussiness@arhamadib.in" className="flex items-center gap-4 text-body hover:text-primary transition-colors group text-xs sm:text-base">
+                <a href={`mailto:${CONTACT_INFO.email}`} className="flex items-center gap-4 text-body hover:text-primary transition-colors group text-xs sm:text-base">
                   <div className="w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center rounded-lg bg-secondary card-shadow group-hover:text-primary transition-all shrink-0">
                     <Mail size={18} className="lg:size-5" />
                   </div>
-                  <span className="font-semibold truncate">bussiness@arhamadib.in</span>
+                  <span className="font-semibold truncate">{CONTACT_INFO.email}</span>
                 </a>
               </div>
             </div>

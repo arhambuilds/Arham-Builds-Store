@@ -3,44 +3,19 @@ import { ChevronDown, Info, Zap, Calendar, RefreshCcw, ShieldCheck, HelpCircle, 
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { cn } from '../lib/utils';
-
-const FAQ_ITEMS = [
-  {
-    icon: <Info className="w-4 h-4" />,
-    question: "How does the process work?",
-    answer: "The workflow is simple: Choose your template, complete the secure checkout, and share your receipt on WhatsApp. We then provide a simple form for your images/text, and our team deploys your live site within 12-24 hours."
-  },
-  {
-    icon: <Zap className="w-4 h-4" />,
-    question: "What is the delivery timeline?",
-    answer: "Efficiency is our priority. We guarantee delivery within a 12 to 24-hour window starting from the moment you submit your customization requirements."
-  },
-  {
-    icon: <Calendar className="w-4 h-4" />,
-    question: "How long is hosting active?",
-    answer: "Standard hosting is provided for 2 months. If you need a permanent URL or an extension, simply request it via email or WhatsApp and we will provide a custom quote."
-  },
-  {
-    icon: <RefreshCcw className="w-4 h-4" />,
-    question: "What is your refund policy?",
-    answer: "As digital assets are delivered instantly, all sales are final. However, we offer a 100% refund guarantee if we fail to meet our 24-hour delivery commitment."
-  },
-  {
-    icon: <ShieldCheck className="w-4 h-4" />,
-    question: "Is my personal data safe?",
-    answer: "Completely. Your photos and text are used only for deployment. We purge all client media from our production servers once the hosting period concludes."
-  },
-  {
-    icon: <HelpCircle className="w-4 h-4" />,
-    question: "Do I need any technical skills?",
-    answer: "Zero. We handle all the coding, server setup, and deployment. You only need to provide the content you want to see on your site."
-  }
-];
+import { useData } from '../lib/data-manager';
 
 export default function FAQ({ isFullPage = false }: { isFullPage?: boolean }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const { FAQ_DATA } = useData();
+
+  const FAQ_ITEMS = FAQ_DATA.map(item => ({
+    icon: <HelpCircle className="w-4 h-4" />,
+    question: item.question,
+    answer: item.answer
+  }));
 
   useEffect(() => {
     const observer = new IntersectionObserver(

@@ -2,11 +2,12 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import { Search, SlidersHorizontal, ArrowLeft, X, Check, RefreshCcw, Sparkles, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
-import { PRODUCTS, Product } from '../data';
+import { Product } from '../data';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { ProductCard } from './Store';
 import { cn } from '../lib/utils';
+import { useData } from '../lib/data-manager';
 
 const StoreDecoration = () => {
   const storeHearts = [
@@ -66,6 +67,7 @@ export default function StoreGeneric({
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
+  const { PRODUCTS } = useData();
 
   useEffect(() => {
     window.scrollTo(0, 0);

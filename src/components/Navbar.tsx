@@ -3,9 +3,10 @@ import { Menu as MenuIcon, X, Briefcase, Calendar, Moon, Sun, User, ArrowRight, 
 import { useState, useEffect, MouseEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
-import { NAV_LINKS } from '../data';
+import { useData } from '../lib/data-manager';
 
 export default function Navbar() {
+  const { CONTACT_INFO, NAV_LINKS, HERO_DATA } = useData();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
@@ -255,11 +256,11 @@ export default function Navbar() {
                   <div className="space-y-6 border-l-4 border-primary/10 pl-8">
                      <div className="space-y-1">
                         <span className="text-[10px] font-bold uppercase tracking-widest text-primary/40">Email</span>
-                        <p className="text-lg font-black text-heading text-pretty">bussiness@arhamadib.in</p>
+                        <p className="text-lg font-black text-heading text-pretty">{CONTACT_INFO.email}</p>
                      </div>
                      <div className="space-y-1">
                         <span className="text-[10px] font-bold uppercase tracking-widest text-primary/40">Location</span>
-                        <p className="text-lg font-black text-heading">Kishanganj, Bihar, India</p>
+                        <p className="text-lg font-black text-heading">{CONTACT_INFO.address}</p>
                      </div>
                   </div>
                   <Link 

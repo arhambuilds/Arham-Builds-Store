@@ -15,11 +15,37 @@ async function startServer() {
 
   app.use(express.json({ limit: '10mb' }));
 
+  const DATA_PATH = path.join(process.cwd(), "src/data.ts");
+  const PUBLIC_DATA_PATH = path.join(process.cwd(), "public", "data.json");
+
+  // Route for frontend to fetch dynamic data
+  app.get("/data.json", (req, res) => {
+    if (fs.existsSync(PUBLIC_DATA_PATH)) {
+      res.sendFile(PUBLIC_DATA_PATH);
+    } else {
+      // Fallback or empty if not found
+      res.status(404).json({ error: "Dynamic data not yet generated. Save from admin panel first." });
+    }
+  });
+
+  // Helper to get data from local state-like storage or file
+  app.get("/api/public/data", (req, res) => {
+    try {
+      const content = fs.readFileSync(DATA_PATH, "utf8");
+      // Basic extraction of JSON parts from the ts file for the frontend
+      // Note: In a real production app, we'd use a database or a real JSON file.
+      // For this portfolio, we'll serve the raw content and let the client parse if needed,
+      // or we can just send the content as a string.
+      res.json({ content });
+    } catch (error) {
+      res.status(500).json({ error: (error as Error).message });
+    }
+  });
+
   // API Route to read data.ts content
   app.get("/api/admin/data", (req, res) => {
     try {
-      const dataPath = path.join(process.cwd(), "src/data.ts");
-      const content = fs.readFileSync(dataPath, "utf8");
+      const content = fs.readFileSync(DATA_PATH, "utf8");
       res.json({ content });
     } catch (error) {
       res.status(500).json({ error: (error as Error).message });
@@ -28,14 +54,23 @@ async function startServer() {
 
   // API Route to save data.ts content
   app.post("/api/admin/save-data", async (req, res) => {
-    const { content } = req.body;
+    const { content, jsonData } = req.body;
     if (!content) {
       return res.status(400).json({ error: "Content is required" });
     }
     try {
-      // 1. Save locally first
-      const dataPath = path.join(process.cwd(), "src/data.ts");
-      fs.writeFileSync(dataPath, content, "utf8");
+      // 1. Save locally first (Source code sync)
+      fs.writeFileSync(DATA_PATH, content, "utf8");
+
+      // 2. Save JSON snapshot for the public site to fetch dynamically
+      if (jsonData) {
+        const jsonPath = path.join(process.cwd(), "public", "data.json");
+        // Ensure public dir exists
+        if (!fs.existsSync(path.join(process.cwd(), "public"))) {
+          fs.mkdirSync(path.join(process.cwd(), "public"));
+        }
+        fs.writeFileSync(jsonPath, JSON.stringify(jsonData, null, 2), "utf8");
+      }
 
       // 2. Sync with GitHub if configured
       const token = process.env.GITHUB_TOKEN;

@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
-import { NAV_LINKS } from '../data';
+import { useData } from '../lib/data-manager';
 
 export default function Footer() {
+  const { HERO_DATA } = useData();
   return (
     <footer className="bg-secondary pt-10 pb-10 shadow-inner">
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-10 md:py-12">
@@ -11,13 +12,13 @@ export default function Footer() {
             <Link to="/" className="flex items-center justify-start gap-3">
               <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-primary/20">
                 <img 
-                  src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgV4_PzmTUKmZfLipz0IZOO5cMvwqNvfX1zIQrv19tqdMzCd3qNRmbcqgLzeY-nfdCl-Y_3KbaToX3lLgamK1wbKH9We_0RdavOm4Ci24K6cVz0RorQK95k8aGSdh2lRMz0pyCdoVzKYFgN0cQQwerenIipHrNAYHDa2h61HIejBn07XpGX3SxOHnj9JA/s320/Arham-Adib-Logo.jpg" 
-                  alt="Arham Adib" 
+                  src={HERO_DATA.profileImage} 
+                  alt={HERO_DATA.name} 
                   className="w-full h-full object-cover"
                 />
               </div>
               <span className="text-2xl font-bold font-display uppercase tracking-tighter">
-                Arham Adib
+                {HERO_DATA.name}
               </span>
             </Link>
             <p className="text-body/70 text-sm leading-relaxed max-w-xs">
@@ -61,7 +62,7 @@ export default function Footer() {
 
         <div className="text-center pt-8 border-t border-primary/5">
           <p className="text-body/40 text-xs font-semibold tracking-widest uppercase mb-2">
-            © {new Date().getFullYear()} <a href="https://arhamadib.in" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Arham Adib</a>. All rights reserved.
+            © {new Date().getFullYear()} <a href="https://arhamadib.in" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">{HERO_DATA.name}</a>. All rights reserved.
           </p>
           <p className="text-[10px] text-body/40 font-medium tracking-widest">
             Made with 💗 Arham.

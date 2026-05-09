@@ -2,8 +2,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ArrowRight, Flame, TrendingUp, Sparkles, AlertCircle, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState, useRef } from 'react';
-import { PRODUCTS, type Product } from '../data';
+import { type Product } from '../data';
 import { cn } from '../lib/utils';
+import { useData } from '../lib/data-manager';
 
 interface ProductSectionProps {
   id: string;
@@ -26,6 +27,7 @@ export default function ProductSection({
 }: ProductSectionProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showScrollHint, setShowScrollHint] = useState(true);
+  const { PRODUCTS } = useData();
 
   const filteredProducts = category === 'Templates'
     ? PRODUCTS.filter(p => p.category !== 'Freebies' && p.category !== 'Editing Assets')

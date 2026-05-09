@@ -8,11 +8,12 @@ import {
 } from 'lucide-react';
 import React, { useEffect, useState, useRef, type MouseEvent } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { PRODUCTS, type Product } from '../data';
+import { type Product } from '../data';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { cn } from '../lib/utils';
 import { ProductCard } from './Store';
+import { useData } from '../lib/data-manager';
 
 interface InteractiveProps {
   feature: { name: string; description: string };
@@ -63,6 +64,7 @@ const InteractiveFeature = ({ feature }: InteractiveProps) => {
 export default function ProductDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { PRODUCTS } = useData();
   const [product, setProduct] = useState<Product | null>(null);
   const [isRevealed, setIsRevealed] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);

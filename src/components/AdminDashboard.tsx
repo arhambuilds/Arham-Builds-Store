@@ -34,6 +34,11 @@ export default function AdminDashboard() {
   const [products, setProducts] = useState<Product[]>(PRODUCTS);
   const [heroData, setHeroData] = useState(HERO_DATA);
   const [faqData, setFaqData] = useState(FAQ_DATA);
+  const [testimonials, setTestimonials] = useState(TESTIMONIALS);
+  const [navLinks, setNavLinks] = useState(NAV_LINKS);
+  const [privacyPolicy, setPrivacyPolicy] = useState(PRIVACY_POLICY);
+  const [termsConditions, setTermsConditions] = useState(TERMS_CONDITIONS);
+  const [contactInfo, setContactInfo] = useState(CONTACT_INFO);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -134,15 +139,16 @@ export interface Skill {
 }
 `;
 
-    const navLinks = `export const NAV_LINKS: NavLink[] = ${JSON.stringify(NAV_LINKS, null, 2)};\n`;
+    const navLinksStr = `export const NAV_LINKS: NavLink[] = ${JSON.stringify(navLinks, null, 2)};\n`;
     const faqDataStr = `export const FAQ_DATA = ${JSON.stringify(faqData, null, 2)};\n`;
-    const privacyPolicy = `export const PRIVACY_POLICY = ${JSON.stringify(PRIVACY_POLICY, null, 2)};\n`;
-    const termsConditions = `export const TERMS_CONDITIONS = ${JSON.stringify(TERMS_CONDITIONS, null, 2)};\n`;
+    const privacyPolicyStr = `export const PRIVACY_POLICY = ${JSON.stringify(privacyPolicy, null, 2)};\n`;
+    const termsConditionsStr = `export const TERMS_CONDITIONS = ${JSON.stringify(termsConditions, null, 2)};\n`;
     const heroDataStr = `export const HERO_DATA = ${JSON.stringify(heroData, null, 2)};\n`;
-    const testimonials = `export const TESTIMONIALS: Testimonial[] = ${JSON.stringify(TESTIMONIALS, null, 2)};\n`;
+    const testimonialsStr = `export const TESTIMONIALS: Testimonial[] = ${JSON.stringify(testimonials, null, 2)};\n`;
     const productsArray = `export const PRODUCTS: Product[] = ${JSON.stringify(updatedProducts, null, 2)};\n`;
+    const contactInfoStr = `export const CONTACT_INFO = ${JSON.stringify(contactInfo, null, 2)};\n`;
 
-    return `${interfaces}\n${navLinks}\n${faqDataStr}\n${privacyPolicy}\n${termsConditions}\n${heroDataStr}\n${productsArray}\n${testimonials}`;
+    return `${interfaces}\n${navLinksStr}\n${faqDataStr}\n${privacyPolicyStr}\n${termsConditionsStr}\n${heroDataStr}\n${contactInfoStr}\n${productsArray}\n${testimonialsStr}`;
   };
 
   const handleSave = async (contentToSave?: string) => {
@@ -151,14 +157,30 @@ export interface Skill {
     setGithubStatus('idle');
     setGithubError('');
     
-    // If we're not using raw editor, generate the content from products state
+    // Generate the TS content
+    const updatedProducts = products;
     const finalContent = contentToSave || (activeTab === 'raw' ? rawContent : generateDataTS(products));
+
+    // Prepare a clean JSON version of the data for the public site to fetch
+    const jsonData = {
+      PRODUCTS: products,
+      HERO_DATA: heroData,
+      FAQ_DATA: faqData,
+      NAV_LINKS: navLinks,
+      TESTIMONIALS: testimonials,
+      PRIVACY_POLICY: privacyPolicy,
+      TERMS_CONDITIONS: termsConditions,
+      CONTACT_INFO: contactInfo
+    };
 
     try {
       const res = await fetch('/api/admin/save-data', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: finalContent })
+        body: JSON.stringify({ 
+          content: finalContent,
+          jsonData: jsonData // Send JSON version too
+        })
       });
       
       const data = await res.json();
@@ -513,6 +535,39 @@ export interface Skill {
                     >
                       Add New FAQ Item
                     </button>
+                  </div>
+                </div>
+
+                {/* Contact Info Edit */}
+                <div className="bg-white p-8 rounded-[2.5rem] card-shadow border border-primary/5 space-y-6">
+                  <h3 className="text-xs font-black uppercase tracking-[0.2em] text-primary flex items-center gap-3">
+                    <Phone size={16} /> Contact Details
+                  </h3>
+                  <div className="space-y-4">
+                    <div className="space-y-1">
+                       <label className="text-[9px] font-bold text-body/40 uppercase ml-1">Email Address</label>
+                       <input 
+                         className="w-full bg-secondary border-none rounded-xl p-4 text-xs font-bold outline-none focus:ring-2 focus:ring-primary/20" 
+                         value={contactInfo.email} 
+                         onChange={(e) => setContactInfo({...contactInfo, email: e.target.value})}
+                       />
+                    </div>
+                    <div className="space-y-1">
+                       <label className="text-[9px] font-bold text-body/40 uppercase ml-1">Phone Number</label>
+                       <input 
+                         className="w-full bg-secondary border-none rounded-xl p-4 text-xs font-bold outline-none focus:ring-2 focus:ring-primary/20" 
+                         value={contactInfo.phone} 
+                         onChange={(e) => setContactInfo({...contactInfo, phone: e.target.value})}
+                       />
+                    </div>
+                    <div className="space-y-1">
+                       <label className="text-[9px] font-bold text-body/40 uppercase ml-1">Physical Address</label>
+                       <input 
+                         className="w-full bg-secondary border-none rounded-xl p-4 text-xs font-bold outline-none focus:ring-2 focus:ring-primary/20" 
+                         value={contactInfo.address} 
+                         onChange={(e) => setContactInfo({...contactInfo, address: e.target.value})}
+                       />
+                    </div>
                   </div>
                 </div>
              </div>
