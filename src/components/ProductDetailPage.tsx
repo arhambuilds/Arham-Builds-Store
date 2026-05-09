@@ -4,12 +4,11 @@ import {
   Heart, Info, Lock, History, AlertCircle, ArrowRight, ExternalLink, 
   CreditCard, Flame, TrendingUp, Sparkles, Clock, Zap, Package, Calendar, 
   RefreshCcw, ChevronRight, MousePointer2, FileText, Send, Rocket, Pause, 
-  Volume2, VolumeX, Target, ShieldAlert, Award, Layers, Gamepad2, Film, Users, Smile as Laugh
+  Volume2, VolumeX 
 } from 'lucide-react';
 import React, { useEffect, useState, useRef, type MouseEvent } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { PRODUCTS, type Product } from '../data';
-import { useProducts } from '../hooks/useProducts';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { cn } from '../lib/utils';
@@ -72,28 +71,16 @@ export default function ProductDetailPage() {
   const [progress, setProgress] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const { products } = useProducts();
-
   useEffect(() => {
     window.scrollTo(0, 0);
-    const foundProduct = products.find(p => p.id === id || p.slug === id);
+    const foundProduct = PRODUCTS.find(p => p.id === id || p.slug === id);
     if (foundProduct) {
       setProduct(foundProduct);
       setTimeout(() => setIsRevealed(true), 100);
     } else {
-      // Small delay to allow products to load from localStorage if needed
-      const checkAgain = setTimeout(() => {
-        const reallyFound = products.find(p => p.id === id || p.slug === id);
-        if (reallyFound) {
-          setProduct(reallyFound);
-          setIsRevealed(true);
-        } else if (products.length > 0) {
-          navigate('/store');
-        }
-      }, 500);
-      return () => clearTimeout(checkAgain);
+      navigate('/store');
     }
-  }, [id, navigate, products]);
+  }, [id, navigate]);
 
   useEffect(() => {
     if (isPlaying && !isPaused && videoRef.current) {
@@ -163,7 +150,7 @@ export default function ProductDetailPage() {
     if (videoRef.current) videoRef.current.muted = !isMuted;
   };
 
-  const recommendedProducts = products.filter(p => p.id !== product.id).slice(0, 2);
+  const recommendedProducts = PRODUCTS.filter(p => p.id !== product.id).slice(0, 2);
 
   return (
     <div className="bg-secondary min-h-screen">
@@ -295,19 +282,19 @@ export default function ProductDetailPage() {
                     <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
                   <h4 className="font-bold text-heading text-[11px] sm:text-xs tracking-tight">Safe Purchase</h4>
-                  <p className="text-[8px] sm:text-[9px] text-body/40 font-bold mt-0.5">Verified & Secure</p>
+                  <p className="text-[8px] sm:text-[9px] text-body/40 font-bold uppercase tracking-widest mt-0.5">Verified & Secure</p>
                 </div>
                 <div className="p-4 sm:p-5 rounded-2xl bg-white card-shadow border border-primary/5 flex flex-col items-center text-center group transition-all cursor-default">
                   <div className="w-10 h-10 sm:w-11 sm:h-11 bg-blue-100/50 text-blue-600 rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                     <Zap className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
                   <h4 className="font-bold text-heading text-[11px] sm:text-xs tracking-tight">Fast Delivery</h4>
-                  <p className="text-[8px] sm:text-[9px] text-body/40 font-bold mt-0.5">Within 12-24 Hours</p>
+                  <p className="text-[8px] sm:text-[9px] text-body/40 font-bold uppercase tracking-widest mt-0.5">Within 12-24 Hours</p>
                 </div>
               </div>
 
               <div className="hidden lg:block pt-8">
-                <h3 className="text-[10px] font-black tracking-[0.15em] text-body/30 flex items-center gap-4 mb-10">
+                <h3 className="text-xs font-black uppercase tracking-[0.25em] text-body/30 flex items-center gap-4 mb-10">
                   <Rocket size={18} className="text-primary" />
                   The Magic Process
                 </h3>
@@ -324,7 +311,7 @@ export default function ProductDetailPage() {
                         <step.icon size={18} className="text-primary" />
                       </div>
                       <div className="pt-0.5">
-                        <h4 className="text-sm font-black text-heading mb-0.5 group-hover:text-primary transition-colors tracking-tight">{step.title}</h4>
+                        <h4 className="text-sm font-black text-heading mb-0.5 group-hover:text-primary transition-colors uppercase tracking-tight">{step.title}</h4>
                         <p className="text-[11px] text-body/50 font-medium leading-relaxed">{step.desc}</p>
                       </div>
                     </div>
@@ -335,7 +322,7 @@ export default function ProductDetailPage() {
               {/* Recommended Products */}
               <div className="hidden lg:block pt-12 border-t border-primary/5">
                 <div className="flex items-center justify-between mb-8">
-                  <h3 className="text-[10px] font-black tracking-[0.1em] text-body/30 flex items-center gap-4">
+                  <h3 className="text-xs font-black uppercase tracking-[0.25em] text-body/30 flex items-center gap-4">
                     <Sparkles size={16} className="text-primary" />
                     Recommended for You
                   </h3>
@@ -363,8 +350,8 @@ export default function ProductDetailPage() {
             )}>
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <span className="px-3 py-1 rounded-lg border border-primary/20 bg-primary/5 text-primary text-[10px] font-bold tracking-wide">
-                    {product.subCategory || product.category}
+                  <span className="px-3 py-1 rounded-lg border border-primary/20 bg-primary/5 text-primary text-[9px] font-black uppercase tracking-widest">
+                    {product.category}
                   </span>
                   {isLowStock && !isOutOfStock && (
                     <span className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-orange-500/10 text-orange-600 text-[9px] font-black uppercase tracking-wider border border-orange-500/20 animate-pulse">
@@ -372,7 +359,7 @@ export default function ProductDetailPage() {
                     </span>
                   )}
                 </div>
-                <h1 className="text-2xl lg:text-3xl font-black text-heading leading-tight tracking-tight">
+                <h1 className="text-2xl lg:text-3xl font-black text-heading leading-tight uppercase tracking-tighter">
                   {product.title}
                 </h1>
                 <p className="text-xs lg:text-sm text-body/70 leading-relaxed font-medium">
@@ -443,144 +430,57 @@ export default function ProductDetailPage() {
               </div>
 
               <div className="space-y-3 pt-6 border-t border-primary/5">
-                {product.category === 'Editing Assets' ? (
-                  <>
-                    {/* What You’ll Receive Box */}
-                    <div className="bg-primary/5 p-5 rounded-2xl border border-primary/10 group hover:bg-white transition-all duration-500">
-                      <h4 className="text-[10px] font-bold text-primary flex items-center gap-2.5 mb-3">
-                        <Package size={14} /> What You’ll Receive
-                      </h4>
-                      <ul className="space-y-2 text-[11px] font-semibold text-body/80 tracking-tight">
-                        {product.whatYouReceive?.map((item, idx) => (
-                          <li key={idx} className="flex items-center gap-2">
-                            <div className="w-4 h-4 rounded-md bg-primary flex items-center justify-center shrink-0">
-                              <CheckCircle2 size={10} className="text-white" />
-                            </div>
-                            {item}
-                          </li>
-                        ))}
-                        <li className="flex items-center gap-2 text-red-500 sm:animate-pulse">
-                          <div className="w-4 h-4 rounded-md bg-red-500 flex items-center justify-center shrink-0">
-                            <Zap size={10} className="text-white" />
-                          </div>
-                          Order cannot be cancelled after placed!
-                        </li>
-                      </ul>
-                    </div>
-
-                    {/* Why Choose This Box */}
-                    {product.whyChoose && (
-                      <div className="bg-indigo-500/[0.03] p-5 rounded-2xl border border-indigo-500/10 group hover:bg-white transition-all duration-500">
-                        <h4 className="text-[10px] font-bold text-indigo-600 flex items-center gap-2.5 mb-3">
-                          <Award size={14} /> Why Choose This {product.subCategory || 'Pack'}?
-                        </h4>
-                        <ul className="space-y-2.5">
-                          {product.whyChoose.map((item, idx) => (
-                            <li key={idx} className="flex items-start gap-3">
-                              <Sparkles size={12} className="text-indigo-500 mt-0.5 shrink-0" />
-                              <p className="text-[11px] text-body/70 font-semibold leading-snug">
-                                <span className="text-indigo-600 font-bold">{item.label}</span> – {item.description}
-                              </p>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {/* Best Use Cases Box */}
-                    {product.whereToUse && (
-                      <div className="bg-emerald-500/[0.03] p-5 rounded-2xl border border-emerald-500/10 group hover:bg-white transition-all duration-500">
-                        <h4 className="text-[10px] font-bold text-emerald-600 flex items-center gap-2.5 mb-3">
-                          <Target size={14} /> Where to Use This?
-                        </h4>
-                        <ul className="space-y-2.5">
-                          {product.whereToUse.map((item, idx) => (
-                            <li key={idx} className="flex items-start gap-3">
-                              <Layers size={12} className="text-emerald-500 mt-0.5 shrink-0" />
-                              <p className="text-[11px] text-body/70 font-semibold leading-snug">
-                                <span className="text-emerald-600 font-bold">{item.label}</span> – {item.description}
-                              </p>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {/* Disclaimer Box */}
-                    <div className="bg-red-500/[0.03] p-5 rounded-2xl border border-red-500/10 group hover:bg-white transition-all duration-500">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="bg-red-500 p-1.5 rounded-lg text-white shadow-lg shadow-red-500/20 group-hover:scale-110 transition-transform">
-                          <ShieldAlert size={14} />
+                <div className="bg-primary/5 p-5 rounded-2xl border border-primary/10 group hover:bg-white transition-all duration-500">
+                  <h4 className="text-[9px] font-black uppercase tracking-[0.25em] text-primary flex items-center gap-2.5 mb-3">
+                    <Package size={14} /> What You’ll Receive
+                  </h4>
+                  <ul className="space-y-2 text-[11px] font-bold text-body/80 uppercase tracking-tight">
+                    {product.whatYouReceive?.map((item, idx) => (
+                      <li key={idx} className={cn(
+                        "flex items-center gap-2",
+                        item.includes('!') ? "text-red-500 animate-pulse" : ""
+                      )}>
+                        <div className={cn(
+                          "w-4 h-4 rounded-md flex items-center justify-center shrink-0",
+                          item.includes('!') ? "bg-red-500" : "bg-primary"
+                        )}>
+                          <CheckCircle2 size={10} className="text-white" />
                         </div>
-                        <h4 className="text-[10px] font-bold text-red-600">
-                          Secure Delivery & Refund
-                        </h4>
-                      </div>
-                      <p className="text-[11px] text-body/60 font-semibold leading-relaxed mb-3">
-                        Instant delivery after payment. Strictly <span className="text-red-500 font-bold underline">No Refunds</span> after purchase.
-                      </p>
-                      <div className="bg-red-500/5 p-3 rounded-xl border border-red-500/10">
-                        <p className="text-[9px] text-red-600/60 font-bold tracking-wide leading-tight">
-                          Note: I do not own these assets; they are a collection curated from my editing journey.
-                        </p>
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="bg-primary/5 p-5 rounded-2xl border border-primary/10 group hover:bg-white transition-all duration-500">
-                      <h4 className="text-[10px] font-bold text-primary flex items-center gap-2.5 mb-3">
-                        <Package size={14} /> What You’ll Receive
-                      </h4>
-                      <ul className="space-y-2 text-[11px] font-semibold text-body/80 tracking-tight">
-                        {product.whatYouReceive?.map((item, idx) => (
-                          <li key={idx} className={cn(
-                            "flex items-center gap-2",
-                            item.includes('!') ? "text-red-500 animate-pulse" : ""
-                          )}>
-                            <div className={cn(
-                              "w-4 h-4 rounded-md flex items-center justify-center shrink-0",
-                              item.includes('!') ? "bg-red-500" : "bg-primary"
-                            )}>
-                              <CheckCircle2 size={10} className="text-white" />
-                            </div>
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
-                    <div className="bg-emerald-500/[0.03] p-5 rounded-2xl border border-emerald-500/10 group hover:bg-white transition-all duration-500">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="bg-emerald-500 p-1.5 rounded-lg text-white shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
-                          <Lock size={14} />
-                        </div>
-                        <h4 className="text-[10px] font-bold text-emerald-600 flex items-center gap-2.5 mb-3">
-                          <Lock size={14} /> 100% Secure Privacy
-                        </h4>
-                      </div>
-                      <p className="text-[11px] text-body/60 font-semibold leading-relaxed">
-                        We use your assets only to create your product. All files are securely deleted after 2 months.
-                      </p>
+                <div className="bg-emerald-500/[0.03] p-5 rounded-2xl border border-emerald-500/10 group hover:bg-white transition-all duration-500">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="bg-emerald-500 p-1.5 rounded-lg text-white shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+                      <Lock size={14} />
                     </div>
+                    <h4 className="text-[9px] font-black uppercase tracking-[0.25em] text-emerald-600">
+                      100% SECURE PRIVACY
+                    </h4>
+                  </div>
+                  <p className="text-[11px] text-body/60 font-semibold leading-relaxed">
+                    We use your assets only to create your product. All files are securely deleted after 2 months.
+                  </p>
+                </div>
 
-                    <div className="bg-primary/5 p-5 rounded-2xl border border-primary/10 group hover:bg-white transition-all duration-500">
-                      <h4 className="text-[10px] font-bold text-primary flex items-center gap-2.5 mb-3">
-                        <RefreshCcw size={14} className="group-hover:rotate-180 transition-transform duration-1000" />
-                        Satisfaction Guarantee
-                      </h4>
-                      <p className="text-[11px] text-body/70 font-semibold mb-3 tracking-tight">
-                        100% money-back guarantee if we fail to deliver within 24 hours of form submission.
-                      </p>
-                      <div className="flex gap-3 items-start bg-secondary/80 p-3 rounded-xl border border-primary/5">
-                        <Clock size={14} className="text-primary shrink-0" />
-                        <p className="text-[9px] text-body/40 font-semibold tracking-wide leading-relaxed">
-                          Delivery timer starts after form submission.
-                        </p>
-                      </div>
-                    </div>
-                  </>
-                )}
+                <div className="bg-primary/5 p-5 rounded-2xl border border-primary/10 group hover:bg-white transition-all duration-500">
+                  <h4 className="text-[9px] font-black uppercase tracking-[0.25em] text-primary flex items-center gap-2.5 mb-3">
+                    <RefreshCcw size={14} className="group-hover:rotate-180 transition-transform duration-1000" />
+                    Satisfaction Guarantee
+                  </h4>
+                  <p className="text-[11px] text-body/70 font-bold mb-3 uppercase tracking-tight">
+                    100% money-back guarantee if we fail to deliver within 24 hours of form submission.
+                  </p>
+                  <div className="flex gap-3 items-start bg-secondary/80 p-3 rounded-xl border border-primary/5">
+                    <Clock size={14} className="text-primary shrink-0" />
+                    <p className="text-[9px] text-body/40 font-bold uppercase tracking-widest leading-relaxed">
+                      Delivery timer starts after form submission.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

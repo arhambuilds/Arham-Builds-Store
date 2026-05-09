@@ -132,7 +132,7 @@ export default function About({ showBackLink = false, isFullPage = false }: { sh
       ref={sectionRef} 
       id={isFullPage ? undefined : "about"}
       className={cn(
-        "bg-secondary relative overflow-hidden transition-colors optimize-gpu",
+        "bg-secondary relative overflow-hidden transition-colors",
         isFullPage ? "pt-0 pb-0" : "pt-8 md:pt-16 pb-16"
       )}
     >

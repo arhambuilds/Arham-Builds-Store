@@ -3,7 +3,6 @@ import { Search, SlidersHorizontal, ArrowLeft, X, Check, RefreshCcw, Sparkles, H
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { PRODUCTS, Product } from '../data';
-import { useProducts } from '../hooks/useProducts';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { ProductCard } from './Store';
@@ -74,10 +73,8 @@ export default function StoreGeneric({
     return () => clearTimeout(timer);
   }, []);
 
-  const { products } = useProducts();
-
   const baseProducts = useMemo(() => {
-    let list = products;
+    let list = PRODUCTS;
     if (allowedCategories) {
       list = list.filter(p => allowedCategories.includes(p.category));
     }
@@ -85,7 +82,7 @@ export default function StoreGeneric({
       list = list.filter(p => !excludeCategories.includes(p.category));
     }
     return list;
-  }, [products, allowedCategories, excludeCategories]);
+  }, [allowedCategories, excludeCategories]);
 
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {

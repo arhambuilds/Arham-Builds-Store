@@ -3,9 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'motion/react';
-import { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Testimonials from './components/Testimonials';
@@ -23,20 +21,8 @@ import TermsConditionsPage from './components/TermsConditionsPage';
 import FreebiesPage from './components/FreebiesPage';
 import FAQ from './components/FAQ';
 import About from './components/About';
-import AdminPage from './components/admin/AdminPage';
-import Preloader from './components/Preloader';
 
 import { useNavigate } from 'react-router-dom';
-
-function ScrollToTop() {
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
-  return null;
-}
 
 function Home() {
   const navigate = useNavigate();
@@ -53,13 +39,7 @@ function Home() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="optimize-gpu"
-    >
+    <>
       <Navbar />
       <main>
         <Hero onExplore={scrollToStore} onCategorySelect={handleCategorySelect} />
@@ -93,42 +73,28 @@ function Home() {
         <Contact />
       </main>
       <Footer />
-    </motion.div>
-  );
-}
-
-function AnimatedRoutes() {
-  const location = useLocation();
-  
-  return (
-    <AnimatePresence mode="wait">
-      <Routes location={location}>
-        <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/store" element={<StorePage />} />
-        <Route path="/premium-templates" element={<StorePage />} />
-        <Route path="/editing-assets" element={<AssetsPage />} />
-        <Route path="/store/:id" element={<ProductDetailPage />} />
-        <Route path="/product/:id" element={<ProductDetailPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/faq" element={<FAQPage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-        <Route path="/terms-conditions" element={<TermsConditionsPage />} />
-        <Route path="/freebies" element={<FreebiesPage />} />
-        <Route path="/admin" element={<AdminPage />} />
-      </Routes>
-    </AnimatePresence>
+    </>
   );
 }
 
 export default function App() {
   return (
     <Router>
-      <ScrollToTop />
-      <Preloader />
       <div className="min-h-screen bg-secondary selection:bg-primary/10 selection:text-primary">
-        <AnimatedRoutes />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/store" element={<StorePage />} />
+          <Route path="/premium-templates" element={<StorePage />} />
+          <Route path="/editing-assets" element={<AssetsPage />} />
+          <Route path="/store/:id" element={<ProductDetailPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/faq" element={<FAQPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms-conditions" element={<TermsConditionsPage />} />
+          <Route path="/freebies" element={<FreebiesPage />} />
+        </Routes>
       </div>
     </Router>
   );

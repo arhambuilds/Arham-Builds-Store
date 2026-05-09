@@ -125,7 +125,7 @@ const Hero: React.FC<HeroProps> = ({ onExplore, onCategorySelect }) => {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left optimize-gpu"
+            className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left"
           >
             <motion.div variants={itemVariants} className="mb-6">
               <div className="inline-flex items-center gap-2 bg-white/50 dark:bg-white/5 px-3 py-1.5 rounded-full card-shadow backdrop-blur-sm border border-white">
