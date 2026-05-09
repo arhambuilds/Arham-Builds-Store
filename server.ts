@@ -96,10 +96,23 @@ async function startServer() {
       appType: "spa",
     });
     app.use(vite.middlewares);
+    
+    // Explicitly handle SPA fallback even in dev if Vite misses it (unlikely but safe)
+    app.get("*", async (req, res, next) => {
+      if (req.url.startsWith('/api')) return next();
+      try {
+        const template = fs.readFileSync(path.resolve(process.cwd(), "index.html"), "utf-8");
+        const transformedTemplate = await vite.transformIndexHtml(req.url, template);
+        res.status(200).set({ "Content-Type": "text/html" }).end(transformedTemplate);
+      } catch (e) {
+        next(e);
+      }
+    });
   } else {
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
     app.get("*", (req, res) => {
+      console.log(`[Express] Serving SPA fallback for: ${req.url}`);
       res.sendFile(path.join(distPath, "index.html"));
     });
   }
