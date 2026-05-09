@@ -18,9 +18,10 @@ import {
   ChevronRight,
   TrendingUp,
   Image as ImageIcon,
-  DollarSign
+  DollarSign,
+  Phone
 } from 'lucide-react';
-import { PRODUCTS, FAQ_DATA, HERO_DATA, TESTIMONIALS, NAV_LINKS, PRIVACY_POLICY, TERMS_CONDITIONS, Product } from '../data';
+import { PRODUCTS, FAQ_DATA, HERO_DATA, TESTIMONIALS, NAV_LINKS, PRIVACY_POLICY, TERMS_CONDITIONS, CONTACT_INFO, Product } from '../data';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
 
