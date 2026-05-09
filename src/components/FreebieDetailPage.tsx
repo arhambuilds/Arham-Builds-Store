@@ -286,6 +286,11 @@ export default function FreebieDetailPage() {
 
                 <div className="grid gap-4">
                   <button 
+                    onClick={() => {
+                      if (product.checkoutUrl) {
+                        window.open(product.checkoutUrl, '_blank');
+                      }
+                    }}
                     className="w-full bg-white text-primary py-4 rounded-xl font-black text-[11px] uppercase tracking-[0.2em] shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3"
                   >
                     <Download size={18} strokeWidth={3} /> Grab For Free

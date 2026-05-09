@@ -80,9 +80,12 @@ function Home() {
   );
 }
 
+import ScrollToHash from './components/ScrollToHash';
+
 export default function App() {
   return (
     <Router>
+      <ScrollToHash />
       <div className="min-h-screen bg-secondary selection:bg-primary/10 selection:text-primary">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -100,7 +103,6 @@ export default function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/terms-conditions" element={<TermsConditionsPage />} />
-          <Route path="/freebies" element={<FreebiesPage />} />
         </Routes>
       </div>
     </Router>

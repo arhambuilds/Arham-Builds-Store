@@ -398,7 +398,11 @@ export default function ProductDetailPage() {
 
                 <div className="flex flex-col gap-4">
                   <button 
-                    onClick={() => !isOutOfStock}
+                    onClick={() => {
+                      if (product.checkoutUrl) {
+                        window.open(product.checkoutUrl, '_blank');
+                      }
+                    }}
                     disabled={isOutOfStock}
                     className={cn(
                       "group relative overflow-hidden py-4 rounded-xl font-black flex items-center justify-center gap-3 transition-all text-[11px] uppercase tracking-[0.2em] w-full",
