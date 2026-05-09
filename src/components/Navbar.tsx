@@ -274,9 +274,9 @@ export default function Navbar() {
             </div>
 
             {/* Backdrop Logo/Background */}
-            <div className="absolute bottom-[5%] right-[4%] flex flex-col items-end text-right select-none pointer-events-none uppercase">
-              <span className="text-[16vw] sm:text-[20vw] leading-[0.75] font-black text-primary/5">ARHAM</span>
-              <span className="text-[16vw] sm:text-[20vw] leading-[0.75] font-black text-primary/5">BUILDS</span>
+            <div className="absolute bottom-[8%] sm:bottom-[2%] left-0 w-full flex flex-col items-center sm:items-end sm:right-[5%] sm:left-auto text-center sm:text-right select-none pointer-events-none uppercase overflow-hidden">
+              <span className="text-[28vw] sm:text-[20vw] leading-[0.7] font-black text-primary/5">ARHAM</span>
+              <span className="text-[28vw] sm:text-[20vw] leading-[0.7] font-black text-primary/5">BUILDS</span>
             </div>
           </motion.div>
         )}
