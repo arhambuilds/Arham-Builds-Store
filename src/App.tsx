@@ -24,6 +24,8 @@ import TermsConditionsPage from './components/TermsConditionsPage';
 import FreebiesPage from './components/FreebiesPage';
 import FAQ from './components/FAQ';
 import About from './components/About';
+import AdminLogin from './components/AdminLogin';
+import AdminDashboard from './components/AdminDashboard';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -101,6 +103,8 @@ export default function App() {
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/terms-conditions" element={<TermsConditionsPage />} />
           <Route path="/freebies" element={<FreebiesPage />} />
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
         </Routes>
       </div>
     </Router>

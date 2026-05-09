@@ -60,7 +60,7 @@ const InteractiveFeature = ({ feature }: InteractiveProps) => {
   );
 };
 
-export default function TemplateDetailPage() {
+export default function ProductDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState<Product | null>(null);
@@ -78,7 +78,7 @@ export default function TemplateDetailPage() {
       setProduct(foundProduct);
       setTimeout(() => setIsRevealed(true), 100);
     } else {
-      navigate('/premium-templates');
+      navigate('/store');
     }
   }, [id, navigate]);
 
@@ -105,6 +105,24 @@ export default function TemplateDetailPage() {
     ? Math.round(((product.originalPrice - product.currentPrice) / product.originalPrice) * 100) 
     : 0;
 
+  const getBadgeIcon = () => {
+    switch (product.badge) {
+      case 'Hot Sell': return <Flame size={14} className="fill-current" />;
+      case 'Trending': return <TrendingUp size={14} />;
+      case 'Latest': return <Sparkles size={14} />;
+      default: return null;
+    }
+  };
+
+  const getBadgeStyles = () => {
+    switch (product.badge) {
+      case 'Hot Sell': return 'bg-orange-500 text-white';
+      case 'Trending': return 'bg-primary text-white';
+      case 'Latest': return 'bg-purple-600 text-white';
+      default: return 'bg-heading text-white';
+    }
+  };
+
   const toggleVideoPlay = (e?: MouseEvent) => {
     if (e) e.stopPropagation();
     if (videoRef.current) {
@@ -125,10 +143,10 @@ export default function TemplateDetailPage() {
     if (videoRef.current) videoRef.current.muted = !isMuted;
   };
 
-  const recommendedTemplates = PRODUCTS.filter(p => p.category === 'Templates' && p.id !== product.id).slice(0, 2);
+  const recommendedProducts = PRODUCTS.filter(p => p.id !== product.id).slice(0, 2);
 
   return (
-    <div className="bg-secondary min-h-screen selection:bg-primary/10 selection:text-primary">
+    <div className="bg-secondary min-h-screen">
       <Navbar />
       
       <main className="pt-28 md:pt-32 pb-10">
@@ -136,19 +154,20 @@ export default function TemplateDetailPage() {
           <motion.button 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            onClick={() => navigate('/premium-templates')}
+            onClick={() => navigate('/store')}
             className="group flex items-center gap-2 text-body/60 hover:text-primary transition-all mb-8 font-black uppercase tracking-widest text-[10px] hover:scale-105 active:scale-95"
           >
             <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
-            BACK TO TEMPLATES
+            BACK TO PREVIOUS
           </motion.button>
 
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-16">
+            {/* LEFT COLUMN: Media & Process */}
             <div className={cn(
               "lg:w-7/12 space-y-6 lg:space-y-8 transition-all duration-1000 transform",
               isRevealed ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
             )}>
-              <div className="relative aspect-video rounded-3xl overflow-hidden card-shadow group/video bg-black cursor-pointer"
+              <div className="relative aspect-video rounded-2xl overflow-hidden card-shadow group/video bg-black cursor-pointer"
                    onClick={() => !isOutOfStock && toggleVideoPlay()}>
                 
                 {product.videoUrl && (
@@ -191,7 +210,17 @@ export default function TemplateDetailPage() {
                       <div className="w-20 h-20 bg-white/20 backdrop-blur-xl border border-white/30 rounded-full flex items-center justify-center group-hover/video:scale-110 transition-transform">
                         <Play size={32} className="text-white fill-white ml-1" />
                       </div>
-                      <p className="mt-4 text-[10px] font-black text-white/70 uppercase tracking-[0.4em]">Watch Template Demo</p>
+                      <p className="mt-4 text-[10px] font-black text-white/70 uppercase tracking-[0.4em]">Watch Preview</p>
+                    </div>
+                  )}
+
+                  {product.badge && (
+                    <div className={cn(
+                      "absolute top-6 left-6 flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg",
+                      getBadgeStyles()
+                    )}>
+                      {getBadgeIcon()}
+                      {product.badge}
                     </div>
                   )}
                 </motion.div>
@@ -230,36 +259,84 @@ export default function TemplateDetailPage() {
                     </div>
                   </div>
                 </div>
+
+                {isOutOfStock && !isPlaying && (
+                  <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/40 backdrop-blur-sm pointer-events-none">
+                    <span className="bg-white/95 text-heading px-10 py-5 rounded-3xl font-black uppercase tracking-[0.2em] shadow-2xl border border-white/20">
+                      Out of Stock
+                    </span>
+                  </div>
+                )}
               </div>
 
-              {/* The Magic Process Section */}
-              <div className="bg-white p-8 sm:p-10 rounded-[2.5rem] card-shadow border border-primary/5">
+              <div className="grid grid-cols-2 gap-3 lg:gap-4">
+                <div className="p-4 sm:p-5 rounded-2xl bg-white card-shadow border border-primary/5 flex flex-col items-center text-center group transition-all cursor-default">
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 bg-emerald-100/50 text-emerald-600 rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                    <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </div>
+                  <h4 className="font-bold text-heading text-[11px] sm:text-xs tracking-tight">Safe Purchase</h4>
+                  <p className="text-[8px] sm:text-[9px] text-body/40 font-bold uppercase tracking-widest mt-0.5">Verified & Secure</p>
+                </div>
+                <div className="p-4 sm:p-5 rounded-2xl bg-white card-shadow border border-primary/5 flex flex-col items-center text-center group transition-all cursor-default">
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 bg-blue-100/50 text-blue-600 rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                    <Zap className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </div>
+                  <h4 className="font-bold text-heading text-[11px] sm:text-xs tracking-tight">Fast Delivery</h4>
+                  <p className="text-[8px] sm:text-[9px] text-body/40 font-bold uppercase tracking-widest mt-0.5">Within 12-24 Hours</p>
+                </div>
+              </div>
+
+              <div className="hidden lg:block pt-8">
                 <h3 className="text-xs font-black uppercase tracking-[0.25em] text-body/30 flex items-center gap-4 mb-10">
                   <Rocket size={18} className="text-primary" />
-                  Deployment Workflow
+                  The Magic Process
                 </h3>
-                <div className="space-y-8 relative ml-4">
+                <div className="space-y-6 relative ml-4">
                   <div className="absolute left-[23px] top-6 bottom-6 w-[1.5px] bg-primary/10" />
                   
                   {[
-                    { title: 'Step 1: Selection', desc: 'Secure the template that fits your project best.', icon: MousePointer2 },
-                    { title: 'Step 2: Customization', desc: 'Provide us with your assets via our secure form.', icon: FileText },
-                    { title: 'Step 3: Delivery', desc: 'Link goes live within 24 hours of submission.', icon: Send }
+                    { title: 'Step 1: Pick Your Template', desc: 'Choose the perfect design and place your order securely.', icon: MousePointer2 },
+                    { title: 'Step 2: Submit Your Details', desc: 'Fill out the customization form with your photos and text.', icon: FileText },
+                    { title: 'Step 3: Live in 24 Hours', desc: 'Receive your ready-to-share live link directly to your email.', icon: Send }
                   ].map((step, idx) => (
-                    <div key={idx} className="relative flex items-start gap-6 group">
-                      <div className="w-12 h-12 rounded-2xl bg-secondary border border-primary/10 flex items-center justify-center flex-shrink-0 z-10 shadow-sm group-hover:scale-110 group-hover:border-primary/30 transition-all">
-                        <step.icon size={20} className="text-primary" />
+                    <div key={idx} className="relative flex items-start gap-5 group">
+                      <div className="w-11 h-11 rounded-xl bg-secondary border border-primary/10 flex items-center justify-center flex-shrink-0 z-10 shadow-sm group-hover:scale-110 group-hover:border-primary/30 transition-all">
+                        <step.icon size={18} className="text-primary" />
                       </div>
                       <div className="pt-0.5">
-                        <h4 className="text-sm font-black text-heading mb-1 group-hover:text-primary transition-colors uppercase tracking-tight">{step.title}</h4>
-                        <p className="text-[11px] text-body/50 font-bold leading-relaxed">{step.desc}</p>
+                        <h4 className="text-sm font-black text-heading mb-0.5 group-hover:text-primary transition-colors uppercase tracking-tight">{step.title}</h4>
+                        <p className="text-[11px] text-body/50 font-medium leading-relaxed">{step.desc}</p>
                       </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Recommended Products */}
+              <div className="hidden lg:block pt-12 border-t border-primary/5">
+                <div className="flex items-center justify-between mb-8">
+                  <h3 className="text-xs font-black uppercase tracking-[0.25em] text-body/30 flex items-center gap-4">
+                    <Sparkles size={16} className="text-primary" />
+                    Recommended for You
+                  </h3>
+                  <Link 
+                    to="/store"
+                    className="group text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary/80 flex items-center gap-1 transition-all hover:scale-105 active:scale-95"
+                  >
+                    View All <ChevronRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
+                  </Link>
+                </div>
+                <div className="grid grid-cols-2 gap-6">
+                  {recommendedProducts.map((p, i) => (
+                    <div key={p.id} className="scale-[0.85] origin-top-left -mr-8 -mb-10">
+                      <ProductCard product={p} index={i} />
                     </div>
                   ))}
                 </div>
               </div>
             </div>
 
+            {/* RIGHT COLUMN: Info & Conversion */}
             <div className={cn(
               "lg:w-5/12 space-y-8 transition-all duration-1000 delay-300 transform",
               isRevealed ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
@@ -267,36 +344,57 @@ export default function TemplateDetailPage() {
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <span className="px-3 py-1 rounded-lg border border-primary/20 bg-primary/5 text-primary text-[9px] font-black uppercase tracking-widest">
-                    PREMIUM TEMPLATE
+                    {product.category}
                   </span>
                   {isLowStock && !isOutOfStock && (
-                    <span className="px-3 py-1 rounded-lg bg-orange-500/10 text-orange-600 text-[9px] font-black uppercase tracking-wider border border-orange-500/20 animate-pulse">
-                      Only {product.stockCount} Slots Available
+                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-orange-500/10 text-orange-600 text-[9px] font-black uppercase tracking-wider border border-orange-500/20 animate-pulse">
+                      <AlertCircle size={10} /> Only {product.stockCount} left
                     </span>
                   )}
                 </div>
-                <h1 className="text-3xl lg:text-4xl font-black text-heading leading-tight uppercase tracking-tighter">
+                <h1 className="text-2xl lg:text-3xl font-black text-heading leading-tight uppercase tracking-tighter">
                   {product.title}
                 </h1>
-                <p className="text-sm text-body/70 leading-relaxed font-bold">
+                <p className="text-xs lg:text-sm text-body/70 leading-relaxed font-medium">
                   {product.description}
                 </p>
               </div>
 
-              <div className="p-8 rounded-[2rem] bg-white card-shadow border border-primary/5 relative overflow-hidden group/pricing">
-                <div className="flex items-baseline gap-4 mb-8">
-                  <span className="text-3xl lg:text-4xl font-black text-heading tracking-tighter">₹{product.currentPrice}</span>
-                  {product.originalPrice && (
-                    <span className="text-lg text-body/20 line-through font-bold">₹{product.originalPrice}</span>
+              <div className="p-6 lg:p-7 rounded-2xl bg-secondary card-shadow border border-primary/5 relative overflow-hidden group/pricing">
+                <div className="absolute top-0 right-0 p-10 opacity-[0.03] pointer-events-none group-hover/pricing:opacity-[0.07] transition-opacity">
+                  <ShoppingCart size={150} />
+                </div>
+                
+                <div className="space-y-1 mb-5">
+                  <div className="flex items-baseline gap-3">
+                    <span className="text-2xl lg:text-3xl font-black text-heading tracking-tighter">₹{product.currentPrice}</span>
+                    {product.originalPrice && (
+                      <span className="text-sm lg:text-base text-body/30 line-through font-bold">₹{product.originalPrice}</span>
+                    )}
+                  </div>
+                  {product.originalPrice && !isOutOfStock && discountPercentage > 0 && (
+                    <div className="inline-block px-3 py-1 rounded-lg bg-red-500 text-white text-[10px] font-black uppercase tracking-widest animate-shimmer-fast bg-gradient-to-r from-red-500 via-white/20 to-red-500 bg-[length:200%_100%]">
+                      SAVE {discountPercentage}%
+                    </div>
                   )}
                 </div>
 
-                <div className="grid gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <button 
+                    onClick={() => !isOutOfStock}
                     disabled={isOutOfStock}
-                    className="w-full bg-primary text-white py-4 rounded-xl font-black text-[11px] uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
+                    className={cn(
+                      "group relative overflow-hidden py-4 rounded-xl font-black flex items-center justify-center gap-3 transition-all text-[11px] uppercase tracking-[0.2em]",
+                      isOutOfStock 
+                        ? "bg-body/5 text-body/30 cursor-not-allowed"
+                        : "bg-primary text-white shadow-2xl shadow-primary/30 hover:scale-105 active:scale-95"
+                    )}
                   >
-                    {isOutOfStock ? 'Slots Filled' : 'Secure This Template'}
+                    {!isOutOfStock && (
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-shimmer" />
+                    )}
+                    {isOutOfStock ? <AlertCircle size={18} /> : <CreditCard size={18} />}
+                    {isOutOfStock ? 'Out of Stock' : 'Order Now'}
                   </button>
                   
                   {product.demoUrl && (
@@ -304,23 +402,77 @@ export default function TemplateDetailPage() {
                       href={product.demoUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full bg-secondary text-heading border border-primary/10 py-4 rounded-xl font-black text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-heading hover:text-white transition-all"
+                      className="group relative overflow-hidden py-4 rounded-xl bg-white text-heading font-black flex items-center justify-center gap-3 hover:bg-primary hover:text-white transition-all hover:scale-105 active:scale-95 text-[11px] border border-primary/10 uppercase tracking-[0.2em] card-shadow-sm"
                     >
-                      <ExternalLink size={18} /> View Live Demo
+                      <ExternalLink size={18} /> Live Demo
                     </a>
                   )}
                 </div>
               </div>
 
-              <div className="space-y-4 bg-white p-8 rounded-[2rem] card-shadow border border-primary/5">
+              <div className="space-y-4">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-body/30 flex items-center gap-3">
                   <Sparkles size={14} className="text-primary" />
-                  Premium Features
+                  Key Features
                 </h3>
                 <div className="grid gap-2">
                   {product.features?.map((feature, idx) => (
                     <InteractiveFeature key={idx} feature={feature} />
                   ))}
+                </div>
+              </div>
+
+              <div className="space-y-3 pt-6 border-t border-primary/5">
+                <div className="bg-primary/5 p-5 rounded-2xl border border-primary/10 group hover:bg-white transition-all duration-500">
+                  <h4 className="text-[9px] font-black uppercase tracking-[0.25em] text-primary flex items-center gap-2.5 mb-3">
+                    <Package size={14} /> What You’ll Receive
+                  </h4>
+                  <ul className="space-y-2 text-[11px] font-bold text-body/80 uppercase tracking-tight">
+                    {product.whatYouReceive?.map((item, idx) => (
+                      <li key={idx} className={cn(
+                        "flex items-center gap-2",
+                        item.includes('!') ? "text-red-500 animate-pulse" : ""
+                      )}>
+                        <div className={cn(
+                          "w-4 h-4 rounded-md flex items-center justify-center shrink-0",
+                          item.includes('!') ? "bg-red-500" : "bg-primary"
+                        )}>
+                          <CheckCircle2 size={10} className="text-white" />
+                        </div>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="bg-emerald-500/[0.03] p-5 rounded-2xl border border-emerald-500/10 group hover:bg-white transition-all duration-500">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="bg-emerald-500 p-1.5 rounded-lg text-white shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+                      <Lock size={14} />
+                    </div>
+                    <h4 className="text-[9px] font-black uppercase tracking-[0.25em] text-emerald-600">
+                      100% SECURE PRIVACY
+                    </h4>
+                  </div>
+                  <p className="text-[11px] text-body/60 font-semibold leading-relaxed">
+                    We use your assets only to create your product. All files are securely deleted after 2 months.
+                  </p>
+                </div>
+
+                <div className="bg-primary/5 p-5 rounded-2xl border border-primary/10 group hover:bg-white transition-all duration-500">
+                  <h4 className="text-[9px] font-black uppercase tracking-[0.25em] text-primary flex items-center gap-2.5 mb-3">
+                    <RefreshCcw size={14} className="group-hover:rotate-180 transition-transform duration-1000" />
+                    Satisfaction Guarantee
+                  </h4>
+                  <p className="text-[11px] text-body/70 font-bold mb-3 uppercase tracking-tight">
+                    100% money-back guarantee if we fail to deliver within 24 hours of form submission.
+                  </p>
+                  <div className="flex gap-3 items-start bg-secondary/80 p-3 rounded-xl border border-primary/5">
+                    <Clock size={14} className="text-primary shrink-0" />
+                    <p className="text-[9px] text-body/40 font-bold uppercase tracking-widest leading-relaxed">
+                      Delivery timer starts after form submission.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

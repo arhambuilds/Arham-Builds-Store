@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu as MenuIcon, X, Briefcase, Calendar, Moon, Sun, User, ArrowRight, ChevronDown } from 'lucide-react';
+import { Menu as MenuIcon, X, Briefcase, Calendar, Moon, Sun, User, ArrowRight, ChevronDown, Lock } from 'lucide-react';
 import { useState, useEffect, MouseEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
