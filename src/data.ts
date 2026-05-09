@@ -25,6 +25,8 @@ export interface Product {
   demoUrl?: string;
   stockCount?: number;
   whatYouReceive?: string[];
+  whyChooseThisPack?: { title: string; description: string; icon: string }[];
+  whereCanYouUseIt?: { title: string; description: string; icon: string }[];
 }
 
 export interface PricingPlan {
@@ -269,6 +271,7 @@ export const PRODUCTS: Product[] = [
     currentPrice: 99,
     originalPrice: 299,
     thumbnailUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80&w=800',
+    videoUrl: 'https://ik.imagekit.io/3kka2lnk8/KAHANI%20SUNO%20VIDEO%20PREVIEW.mp4',
     category: 'Editing Assets',
     badge: 'Latest',
     checkoutUrl: 'https://superprofile.bio/vp/sfx-pack',
@@ -276,7 +279,17 @@ export const PRODUCTS: Product[] = [
       { name: '50+ High Fidelity SFX', description: 'Recorded at 96kHz 24-bit' },
       { name: 'Royalty Free', description: 'Use in any project without attribution' }
     ],
-    whatYouReceive: ['WAV & MP3 Files', 'Metadata Guide']
+    whatYouReceive: ['WAV & MP3 Files', 'Metadata Guide'],
+    whyChooseThisPack: [
+      { title: 'Trusted by Top Creators', description: 'Used by India’s biggest names in content creation.', icon: 'users' },
+      { title: 'Curated by Kavangun', description: 'Years of expertise packed into one kit.', icon: 'award' },
+      { title: 'All-in-One Toolkit', description: 'Everything you need to produce premium content.', icon: 'layoutGrid' }
+    ],
+    whereCanYouUseIt: [
+      { title: 'Gaming Videos', description: 'Amp up the energy and excitement.', icon: 'gamepad2' },
+      { title: 'Documentaries & Vlogs', description: 'Add depth, polish, and emotion.', icon: 'video' },
+      { title: 'Reactions & Edits', description: 'Stand out with humor and style.', icon: 'smile' }
+    ]
   },
   {
     id: 'a2',
@@ -293,7 +306,17 @@ export const PRODUCTS: Product[] = [
       { name: '20+ Presets', description: 'Ready to use templates' },
       { name: 'Tutorial Included', description: 'Step-by-step installation guide' }
     ],
-    whatYouReceive: ['Project Files', 'Video Tutorial']
+    whatYouReceive: ['Project Files', 'Video Tutorial'],
+    whyChooseThisPack: [
+      { title: 'Lightning Fast', description: 'Render times optimized for quick turnarounds.', icon: 'zap' },
+      { title: 'Professional Quality', description: 'Used by industry leading motion designers.', icon: 'award' },
+      { title: 'Versatile Presets', description: 'Works with any frame rate or resolution.', icon: 'layoutGrid' }
+    ],
+    whereCanYouUseIt: [
+      { title: 'YouTube Intros', description: 'Make your channel stand out instantly.', icon: 'video' },
+      { title: 'Social Media Ads', description: 'High-converting animations for marketing.', icon: 'trending-up' },
+      { title: 'Stream Overlays', description: 'Perfect for Twitch and live streaming.', icon: 'gamepad2' }
+    ]
   },
   {
     id: 'a3',
@@ -310,7 +333,17 @@ export const PRODUCTS: Product[] = [
       { name: '10 Premium LUTs', description: 'Universal .cube format' },
       { name: 'Versatile', description: 'Works on LOG and standard footage' }
     ],
-    whatYouReceive: ['LUT Bundle (ZIP)', 'Installation PDF']
+    whatYouReceive: ['LUT Bundle (ZIP)', 'Installation PDF'],
+    whyChooseThisPack: [
+      { title: 'Cinematic Feel', description: 'Hollywood-level color grading in seconds.', icon: 'sparkles' },
+      { title: 'Natural Skin Tones', description: 'Optimized to preserve realistic skin colors.', icon: 'smile' },
+      { title: 'One-Click Apply', description: 'No complex adjustments needed.', icon: 'mouse-pointer-2' }
+    ],
+    whereCanYouUseIt: [
+      { title: 'Short Films', description: 'Give your story a professional look.', icon: 'video' },
+      { title: 'Travel Vlogs', description: 'Bring out the vibrant colors of your trips.', icon: 'globe' },
+      { title: 'Wedding Videos', description: 'Classic, timeless look for special moments.', icon: 'heart' }
+    ]
   },
   {
     id: 'f2',

@@ -4,7 +4,7 @@ import {
   Heart, Info, Lock, History, AlertCircle, ArrowRight, ExternalLink, 
   CreditCard, Flame, TrendingUp, Sparkles, Clock, Zap, Package, Calendar, 
   RefreshCcw, ChevronRight, MousePointer2, FileText, Send, Rocket, Pause, 
-  Volume2, VolumeX 
+  Volume2, VolumeX, Users, Award, LayoutGrid, Gamepad2, Video, Smile, Download 
 } from 'lucide-react';
 import React, { useEffect, useState, useRef, type MouseEvent } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
@@ -58,6 +58,21 @@ const InteractiveFeature = ({ feature }: InteractiveProps) => {
       </AnimatePresence>
     </div>
   );
+};
+
+const IconMap: { [key: string]: React.ElementType } = {
+  'users': Users,
+  'award': Award,
+  'layoutGrid': LayoutGrid,
+  'gamepad2': Gamepad2,
+  'video': Video,
+  'smile': Smile,
+  'zap': Zap,
+  'trending-up': TrendingUp,
+  'sparkles': Sparkles,
+  'mouse-pointer-2': MousePointer2,
+  'globe': Globe,
+  'heart': Heart,
 };
 
 export default function ProductDetailPage() {
@@ -279,10 +294,10 @@ export default function ProductDetailPage() {
                 </div>
                 <div className="p-4 sm:p-5 rounded-2xl bg-white card-shadow border border-primary/5 flex flex-col items-center text-center group transition-all cursor-default">
                   <div className="w-10 h-10 sm:w-11 sm:h-11 bg-blue-100/50 text-blue-600 rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
-                    <Zap className="w-5 h-5 sm:w-6 sm:h-6" />
+                    <Download className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
-                  <h4 className="font-bold text-heading text-[11px] sm:text-xs tracking-tight">Fast Delivery</h4>
-                  <p className="text-[8px] sm:text-[9px] text-body/40 font-bold uppercase tracking-widest mt-0.5">Within 12-24 Hours</p>
+                  <h4 className="font-bold text-heading text-[11px] sm:text-xs tracking-tight">Instant Download</h4>
+                  <p className="text-[8px] sm:text-[9px] text-body/40 font-bold uppercase tracking-widest mt-0.5">Within Seconds</p>
                 </div>
               </div>
 
@@ -295,9 +310,9 @@ export default function ProductDetailPage() {
                   <div className="absolute left-[23px] top-6 bottom-6 w-[1.5px] bg-primary/10" />
                   
                   {[
-                    { title: 'Step 1: Pick Your Template', desc: 'Choose the perfect design and place your order securely.', icon: MousePointer2 },
-                    { title: 'Step 2: Submit Your Details', desc: 'Fill out the customization form with your photos and text.', icon: FileText },
-                    { title: 'Step 3: Live in 24 Hours', desc: 'Receive your ready-to-share live link directly to your email.', icon: Send }
+                    { title: 'Step 1: Pick Your Asset', desc: 'Secure the asset pack that fits your project best.', icon: MousePointer2 },
+                    { title: 'Step 2: Get Access', desc: 'Get your digital download links instantly.', icon: FileText },
+                    { title: 'Step 3: Start Creation', desc: 'Drag and drop into your favorite editing software.', icon: Send }
                   ].map((step, idx) => (
                     <div key={idx} className="relative flex items-start gap-5 group">
                       <div className="w-11 h-11 rounded-xl bg-secondary border border-primary/10 flex items-center justify-center flex-shrink-0 z-10 shadow-sm group-hover:scale-110 group-hover:border-primary/30 transition-all">
@@ -379,12 +394,12 @@ export default function ProductDetailPage() {
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-4">
                   <button 
                     onClick={() => !isOutOfStock}
                     disabled={isOutOfStock}
                     className={cn(
-                      "group relative overflow-hidden py-4 rounded-xl font-black flex items-center justify-center gap-3 transition-all text-[11px] uppercase tracking-[0.2em]",
+                      "group relative overflow-hidden py-4 rounded-xl font-black flex items-center justify-center gap-3 transition-all text-[11px] uppercase tracking-[0.2em] w-full",
                       isOutOfStock 
                         ? "bg-body/5 text-body/30 cursor-not-allowed"
                         : "bg-primary text-white shadow-2xl shadow-primary/30 hover:scale-105 active:scale-95"
@@ -394,7 +409,7 @@ export default function ProductDetailPage() {
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-shimmer" />
                     )}
                     {isOutOfStock ? <AlertCircle size={18} /> : <CreditCard size={18} />}
-                    {isOutOfStock ? 'Out of Stock' : 'Order Now'}
+                    {isOutOfStock ? 'Out of Stock' : 'Buy Now'}
                   </button>
                   
                   {product.demoUrl && (
@@ -402,7 +417,7 @@ export default function ProductDetailPage() {
                       href={product.demoUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group relative overflow-hidden py-4 rounded-xl bg-white text-heading font-black flex items-center justify-center gap-3 hover:bg-primary hover:text-white transition-all hover:scale-105 active:scale-95 text-[11px] border border-primary/10 uppercase tracking-[0.2em] card-shadow-sm"
+                      className="group relative overflow-hidden py-4 rounded-xl bg-white text-heading font-black flex items-center justify-center gap-3 hover:bg-primary hover:text-white transition-all hover:scale-105 active:scale-95 text-[11px] border border-primary/10 uppercase tracking-[0.2em] card-shadow-sm w-full"
                     >
                       <ExternalLink size={18} /> Live Demo
                     </a>
@@ -445,32 +460,67 @@ export default function ProductDetailPage() {
                   </ul>
                 </div>
 
-                <div className="bg-emerald-500/[0.03] p-5 rounded-2xl border border-emerald-500/10 group hover:bg-white transition-all duration-500">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="bg-emerald-500 p-1.5 rounded-lg text-white shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
-                      <Lock size={14} />
-                    </div>
-                    <h4 className="text-[9px] font-black uppercase tracking-[0.25em] text-emerald-600">
-                      100% SECURE PRIVACY
+                {product.whyChooseThisPack && product.whyChooseThisPack.length > 0 && (
+                  <div className="bg-emerald-500/[0.03] p-5 rounded-2xl border border-emerald-500/10 group hover:bg-white transition-all duration-500">
+                    <h4 className="text-[9px] font-black uppercase tracking-[0.25em] text-emerald-600 flex items-center gap-2.5 mb-3">
+                      <Sparkles size={14} /> Why Choose This Pack?
                     </h4>
+                    <ul className="space-y-3">
+                      {product.whyChooseThisPack.map((item, idx) => {
+                        const Icon = IconMap[item.icon] || Sparkles;
+                        return (
+                          <li key={idx} className="flex gap-3">
+                            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
+                              <Icon size={14} className="text-emerald-600" />
+                            </div>
+                            <div className="space-y-0.5">
+                              <p className="text-[11px] font-black text-heading uppercase tracking-tight">{item.title}</p>
+                              <p className="text-[10px] text-body/50 font-bold leading-tight">{item.description}</p>
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ul>
                   </div>
-                  <p className="text-[11px] text-body/60 font-semibold leading-relaxed">
-                    We use your assets only to create your product. All files are securely deleted after 2 months.
-                  </p>
-                </div>
+                )}
+
+                {product.whereCanYouUseIt && product.whereCanYouUseIt.length > 0 && (
+                  <div className="bg-indigo-500/[0.03] p-5 rounded-2xl border border-indigo-500/10 group hover:bg-white transition-all duration-500">
+                    <h4 className="text-[9px] font-black uppercase tracking-[0.25em] text-indigo-600 flex items-center gap-2.5 mb-3">
+                      <Globe size={14} /> Where Can You Use It?
+                    </h4>
+                    <ul className="space-y-3">
+                      {product.whereCanYouUseIt.map((item, idx) => {
+                        const Icon = IconMap[item.icon] || Globe;
+                        return (
+                          <li key={idx} className="flex gap-3">
+                            <div className="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center shrink-0">
+                              <Icon size={14} className="text-indigo-600" />
+                            </div>
+                            <div className="space-y-0.5">
+                              <p className="text-[11px] font-black text-heading uppercase tracking-tight">{item.title}</p>
+                              <p className="text-[10px] text-body/50 font-bold leading-tight">{item.description}</p>
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                )}
 
                 <div className="bg-primary/5 p-5 rounded-2xl border border-primary/10 group hover:bg-white transition-all duration-500">
                   <h4 className="text-[9px] font-black uppercase tracking-[0.25em] text-primary flex items-center gap-2.5 mb-3">
-                    <RefreshCcw size={14} className="group-hover:rotate-180 transition-transform duration-1000" />
-                    Satisfaction Guarantee
+                    <Info size={14} />
+                    Usage & Attribution Note
                   </h4>
                   <p className="text-[11px] text-body/70 font-bold mb-3 uppercase tracking-tight">
-                    100% money-back guarantee if we fail to deliver within 24 hours of form submission.
+                    I’ve collected this over the years as part of my creative journey. I do not own it, but it is free to use.
+
                   </p>
                   <div className="flex gap-3 items-start bg-secondary/80 p-3 rounded-xl border border-primary/5">
                     <Clock size={14} className="text-primary shrink-0" />
                     <p className="text-[9px] text-body/40 font-bold uppercase tracking-widest leading-relaxed">
-                      Delivery timer starts after form submission.
+                      Instant Download starts after payment securely.
                     </p>
                   </div>
                 </div>

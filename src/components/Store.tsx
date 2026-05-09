@@ -165,6 +165,17 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
     }
   };
 
+  const getDetailRoute = (p: Product) => {
+    switch (p.category) {
+      case 'Templates': return `/premium-templates/${p.id}`;
+      case 'Editing Assets': return `/editing-assets/${p.id}`;
+      case 'Freebies': return `/freebies/${p.id}`;
+      default: return `/store/${p.id}`;
+    }
+  };
+
+  const detailRoute = getDetailRoute(product);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -188,7 +199,7 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
       )}
 
       {/* Image / Thumbnail Container */}
-      <Link to={`/store/${product.id}`} className="relative h-56 overflow-hidden block">
+      <Link to={detailRoute} className="relative h-56 overflow-hidden block">
         <img 
           src={product.thumbnailUrl} 
           alt={product.title} 
@@ -226,7 +237,7 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
            <span className="inline-block px-3 py-1 rounded-lg border border-primary/20 bg-primary/5 text-primary text-[9px] font-black uppercase tracking-[0.2em] mb-3">
              {product.category}
            </span>
-           <Link to={`/store/${product.id}`} className="block">
+           <Link to={detailRoute} className="block">
              <h3 className="text-lg font-black text-heading group-hover:text-primary transition-colors leading-tight mb-1 uppercase tracking-tighter">
                {product.title}
              </h3>
@@ -255,7 +266,7 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
             </button>
           ) : (
             <Link 
-              to={`/store/${product.id}`}
+              to={detailRoute}
               className="group/btn relative overflow-hidden w-full bg-primary text-white py-3.5 rounded-xl font-black flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-primary/20 uppercase tracking-[0.2em] text-[10px]"
             >
               <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-shimmer pointer-events-none"></div>

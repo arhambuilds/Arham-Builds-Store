@@ -130,7 +130,7 @@ const Hero: React.FC<HeroProps> = ({ onExplore, onCategorySelect }) => {
             <motion.div variants={itemVariants} className="mb-6">
               <div className="inline-flex items-center gap-2 bg-white/50 px-3 py-1.5 rounded-full card-shadow backdrop-blur-sm border border-white">
                 <span className="bg-gradient-to-r from-primary to-[#ff512f] text-white text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-widest">India&apos;s #1</span>
-                <span className="text-[10px] font-bold text-body/60 uppercase tracking-widest">Premium Store</span>
+                <span className="text-[10px] font-bold text-body/60 uppercase tracking-widest">Premium Digital Store</span>
               </div>
             </motion.div>
 

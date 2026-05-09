@@ -11,6 +11,9 @@ import ProductSection from './components/Store';
 import StorePage from './components/StorePage';
 import AssetsPage from './components/AssetsPage';
 import ProductDetailPage from './components/ProductDetailPage';
+import TemplateDetailPage from './components/TemplateDetailPage';
+import AssetDetailPage from './components/AssetDetailPage';
+import FreebieDetailPage from './components/FreebieDetailPage';
 import ContactPage from './components/ContactPage';
 import FAQPage from './components/FAQPage';
 import AboutPage from './components/AboutPage';
@@ -86,7 +89,11 @@ export default function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/store" element={<StorePage />} />
           <Route path="/premium-templates" element={<StorePage />} />
+          <Route path="/premium-templates/:id" element={<TemplateDetailPage />} />
           <Route path="/editing-assets" element={<AssetsPage />} />
+          <Route path="/editing-assets/:id" element={<AssetDetailPage />} />
+          <Route path="/freebies" element={<FreebiesPage />} />
+          <Route path="/freebies/:id" element={<FreebieDetailPage />} />
           <Route path="/store/:id" element={<ProductDetailPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/faq" element={<FAQPage />} />
