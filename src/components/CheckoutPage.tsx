@@ -10,7 +10,8 @@ import {
   ArrowRight,
   User,
   Tag,
-  Zap
+  Zap,
+  X
 } from 'lucide-react';
 import { PRODUCTS, Product } from '../data';
 import { cn } from '../lib/utils';
@@ -28,16 +29,86 @@ interface Country {
   name: string;
   flag: string;
   dialCode: string;
+  phoneLength: number;
 }
 
 const COUNTRIES: Country[] = [
-  { code: 'IN', name: 'India', flag: '🇮🇳', dialCode: '+91' },
-  { code: 'US', name: 'United States', flag: '🇺🇸', dialCode: '+1' },
-  { code: 'GB', name: 'United Kingdom', flag: '🇬🇧', dialCode: '+44' },
-  { code: 'CA', name: 'Canada', flag: '🇨🇦', dialCode: '+1' },
-  { code: 'AU', name: 'Australia', flag: '🇦🇺', dialCode: '+61' },
-  { code: 'SG', name: 'Singapore', flag: '🇸🇬', dialCode: '+65' },
-  { code: 'AE', name: 'United Arab Emirates', flag: '🇦🇪', dialCode: '+971' },
+  { code: 'AF', name: 'Afghanistan', flag: '🇦🇫', dialCode: '+93', phoneLength: 9 },
+  { code: 'AL', name: 'Albania', flag: '🇦🇱', dialCode: '+355', phoneLength: 9 },
+  { code: 'DZ', name: 'Algeria', flag: '🇩🇿', dialCode: '+213', phoneLength: 9 },
+  { code: 'AD', name: 'Andorra', flag: '🇦🇩', dialCode: '+376', phoneLength: 6 },
+  { code: 'AO', name: 'Angola', flag: '🇦🇴', dialCode: '+244', phoneLength: 9 },
+  { code: 'AR', name: 'Argentina', flag: '🇦🇷', dialCode: '+54', phoneLength: 10 },
+  { code: 'AM', name: 'Armenia', flag: '🇦🇲', dialCode: '+374', phoneLength: 8 },
+  { code: 'AU', name: 'Australia', flag: '🇦🇺', dialCode: '+61', phoneLength: 9 },
+  { code: 'AT', name: 'Austria', flag: '🇦🇹', dialCode: '+43', phoneLength: 10 },
+  { code: 'AZ', name: 'Azerbaijan', flag: '🇦🇿', dialCode: '+994', phoneLength: 9 },
+  { code: 'BH', name: 'Bahrain', flag: '🇧🇭', dialCode: '+973', phoneLength: 8 },
+  { code: 'BD', name: 'Bangladesh', flag: '🇧🇩', dialCode: '+880', phoneLength: 10 },
+  { code: 'BE', name: 'Belgium', flag: '🇧🇪', dialCode: '+32', phoneLength: 9 },
+  { code: 'BT', name: 'Bhutan', flag: '🇧🇹', dialCode: '+975', phoneLength: 8 },
+  { code: 'BR', name: 'Brazil', flag: '🇧🇷', dialCode: '+55', phoneLength: 11 },
+  { code: 'CA', name: 'Canada', flag: '🇨🇦', dialCode: '+1', phoneLength: 10 },
+  { code: 'CL', name: 'Chile', flag: '🇨🇱', dialCode: '+56', phoneLength: 9 },
+  { code: 'CN', name: 'China', flag: '🇨🇳', dialCode: '+86', phoneLength: 11 },
+  { code: 'CO', name: 'Colombia', flag: '🇨🇴', dialCode: '+57', phoneLength: 10 },
+  { code: 'HR', name: 'Croatia', flag: '🇭🇷', dialCode: '+385', phoneLength: 9 },
+  { code: 'CZ', name: 'Czechia', flag: '🇨🇿', dialCode: '+420', phoneLength: 9 },
+  { code: 'DK', name: 'Denmark', flag: '🇩🇰', dialCode: '+45', phoneLength: 8 },
+  { code: 'EG', name: 'Egypt', flag: '🇪🇬', dialCode: '+20', phoneLength: 10 },
+  { code: 'FI', name: 'Finland', flag: '🇫🇮', dialCode: '+358', phoneLength: 9 },
+  { code: 'FR', name: 'France', flag: '🇫🇷', dialCode: '+33', phoneLength: 9 },
+  { code: 'DE', name: 'Germany', flag: '🇩🇪', dialCode: '+49', phoneLength: 11 },
+  { code: 'GR', name: 'Greece', flag: '🇬🇷', dialCode: '+30', phoneLength: 10 },
+  { code: 'HK', name: 'Hong Kong', flag: '🇭🇰', dialCode: '+852', phoneLength: 8 },
+  { code: 'HU', name: 'Hungary', flag: '🇭🇺', dialCode: '+36', phoneLength: 9 },
+  { code: 'IS', name: 'Iceland', flag: '🇮🇸', dialCode: '+354', phoneLength: 7 },
+  { code: 'IN', name: 'India', flag: '🇮🇳', dialCode: '+91', phoneLength: 10 },
+  { code: 'ID', name: 'Indonesia', flag: '🇮🇩', dialCode: '+62', phoneLength: 11 },
+  { code: 'IR', name: 'Iran', flag: '🇮🇷', dialCode: '+98', phoneLength: 10 },
+  { code: 'IE', name: 'Ireland', flag: '🇮🇪', dialCode: '+353', phoneLength: 9 },
+  { code: 'IL', name: 'Israel', flag: '🇮🇱', dialCode: '+972', phoneLength: 9 },
+  { code: 'IT', name: 'Italy', flag: '🇮🇹', dialCode: '+39', phoneLength: 10 },
+  { code: 'JP', name: 'Japan', flag: '🇯🇵', dialCode: '+81', phoneLength: 10 },
+  { code: 'JO', name: 'Jordan', flag: '🇯🇴', dialCode: '+962', phoneLength: 9 },
+  { code: 'KZ', name: 'Kazakhstan', flag: '🇰🇿', dialCode: '+7', phoneLength: 10 },
+  { code: 'KE', name: 'Kenya', flag: '🇰🇪', dialCode: '+254', phoneLength: 9 },
+  { code: 'KR', name: 'Korea (South)', flag: '🇰🇷', dialCode: '+82', phoneLength: 10 },
+  { code: 'KW', name: 'Kuwait', flag: '🇰🇼', dialCode: '+965', phoneLength: 8 },
+  { code: 'LB', name: 'Lebanon', flag: '🇱🇧', dialCode: '+961', phoneLength: 8 },
+  { code: 'MY', name: 'Malaysia', flag: '🇲🇾', dialCode: '+60', phoneLength: 9 },
+  { code: 'MV', name: 'Maldives', flag: '🇲🇻', dialCode: '+960', phoneLength: 7 },
+  { code: 'MX', name: 'Mexico', flag: '🇲🇽', dialCode: '+52', phoneLength: 10 },
+  { code: 'MA', name: 'Morocco', flag: '🇲🇦', dialCode: '+212', phoneLength: 9 },
+  { code: 'NP', name: 'Nepal', flag: '🇳🇵', dialCode: '+977', phoneLength: 10 },
+  { code: 'NL', name: 'Netherlands', flag: '🇳🇱', dialCode: '+31', phoneLength: 9 },
+  { code: 'NZ', name: 'New Zealand', flag: '🇳🇿', dialCode: '+64', phoneLength: 9 },
+  { code: 'NG', name: 'Nigeria', flag: '🇳🇬', dialCode: '+234', phoneLength: 10 },
+  { code: 'NO', name: 'Norway', flag: '🇳🇴', dialCode: '+47', phoneLength: 8 },
+  { code: 'OM', name: 'Oman', flag: '🇴🇲', dialCode: '+968', phoneLength: 8 },
+  { code: 'PK', name: 'Pakistan', flag: '🇵🇰', dialCode: '+92', phoneLength: 10 },
+  { code: 'PH', name: 'Philippines', flag: '🇵🇭', dialCode: '+63', phoneLength: 10 },
+  { code: 'PL', name: 'Poland', flag: '🇵🇱', dialCode: '+48', phoneLength: 9 },
+  { code: 'PT', name: 'Portugal', flag: '🇵🇹', dialCode: '+351', phoneLength: 9 },
+  { code: 'QA', name: 'Qatar', flag: '🇶🇦', dialCode: '+974', phoneLength: 8 },
+  { code: 'RO', name: 'Romania', flag: '🇷🇴', dialCode: '+40', phoneLength: 10 },
+  { code: 'RU', name: 'Russia', flag: '🇷🇺', dialCode: '+7', phoneLength: 10 },
+  { code: 'SA', name: 'Saudi Arabia', flag: '🇸🇦', dialCode: '+966', phoneLength: 9 },
+  { code: 'SG', name: 'Singapore', flag: '🇸🇬', dialCode: '+65', phoneLength: 8 },
+  { code: 'ZA', name: 'South Africa', flag: '🇿🇦', dialCode: '+27', phoneLength: 9 },
+  { code: 'ES', name: 'Spain', flag: '🇪🇸', dialCode: '+34', phoneLength: 9 },
+  { code: 'LK', name: 'Sri Lanka', flag: '🇱🇰', dialCode: '+94', phoneLength: 9 },
+  { code: 'SE', name: 'Sweden', flag: '🇸🇪', dialCode: '+46', phoneLength: 10 },
+  { code: 'CH', name: 'Switzerland', flag: '🇨🇭', dialCode: '+41', phoneLength: 9 },
+  { code: 'TW', name: 'Taiwan', flag: '🇹🇼', dialCode: '+886', phoneLength: 9 },
+  { code: 'TH', name: 'Thailand', flag: '🇹🇭', dialCode: '+66', phoneLength: 9 },
+  { code: 'TR', name: 'Turkey', flag: '🇹🇷', dialCode: '+90', phoneLength: 10 },
+  { code: 'UA', name: 'Ukraine', flag: '🇺🇦', dialCode: '+380', phoneLength: 9 },
+  { code: 'AE', name: 'United Arab Emirates', flag: '🇦🇪', dialCode: '+971', phoneLength: 9 },
+  { code: 'GB', name: 'United Kingdom', flag: '🇬🇧', dialCode: '+44', phoneLength: 10 },
+  { code: 'US', name: 'United States', flag: '🇺🇸', dialCode: '+1', phoneLength: 10 },
+  { code: 'UZ', name: 'Uzbekistan', flag: '🇺🇿', dialCode: '+998', phoneLength: 9 },
+  { code: 'VN', name: 'Vietnam', flag: '🇻🇳', dialCode: '+84', phoneLength: 9 },
 ];
 
 const AVAILABLE_COUPONS = [
@@ -64,7 +135,8 @@ export default function CheckoutPage() {
     phone: '',
   });
   
-  const [selectedCountry, setSelectedCountry] = useState<Country>(COUNTRIES[0]);
+  const india = COUNTRIES.find(c => c.code === 'IN') || COUNTRIES[0];
+  const [selectedCountry, setSelectedCountry] = useState<Country>(india);
   const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
 
   const LOGO_URL = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj_k4CqxRUYByW2SZXhkby2AxlfiQFsW6jm-KFzlA__1go2Lmu1AxA8hgyXDpEHwxyeBCRbpelQeIJnBfwPCzEhOeXxEUmoCiogiJxr-MwMahQymXwnoy5peuHdUGNlPAXXFzgtx4R3udF4oV20QdEFrfki71UE59XvuI5RDeGk26MkdNlRFMiz6nzqTw/s320/ArhamBuildsLogo.png";
@@ -111,18 +183,27 @@ export default function CheckoutPage() {
   }, [product, appliedCoupon]);
 
   const validateStep1 = () => {
-    if (!formData.fullName.trim() || !formData.email.trim() || !formData.phone.trim()) {
-      return false;
-    }
-    // Simple email regex
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const trimmedName = formData.fullName.trim();
+    if (trimmedName.length < 3) return false;
+
+    // Strict email regex: requires at least 3 characters after the final dot (e.g., .com, .org)
+    // This will prevent .co or .in from being marked as valid if the user wants at least 3 chars.
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{3,}$/;
     if (!emailRegex.test(formData.email)) return false;
+
+    // Check for full digit phone number based on selected country
+    if (formData.phone.length !== selectedCountry.phoneLength) return false;
+
     return true;
   };
 
+  const isContactInfoValid = useMemo(() => {
+    return validateStep1();
+  }, [formData, selectedCountry]);
+
   const isFormValid = useMemo(() => {
-    return validateStep1() && isTermsAccepted;
-  }, [formData, isTermsAccepted]);
+    return isContactInfoValid && isTermsAccepted;
+  }, [isContactInfoValid, isTermsAccepted]);
 
   const handleApplyCoupon = (codeToApply?: string) => {
     const code = (codeToApply || couponCode).toUpperCase();
@@ -133,6 +214,11 @@ export default function CheckoutPage() {
     } else if (couponCode.trim() !== '' || codeToApply) {
       alert('Invalid coupon code.');
     }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode('');
   };
 
   const handlePayment = async () => {
@@ -222,11 +308,11 @@ export default function CheckoutPage() {
 
   return (
     <div className={cn(
-      "min-h-screen lg:h-screen lg:overflow-hidden transition-colors duration-500 font-sans flex flex-col",
+      "min-h-screen transition-colors duration-500 font-sans flex flex-col no-scrollbar",
       isEditingAssets ? "bg-[#0f1115]" : "bg-[#f4f5f8]"
     )}>
       {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center max-w-6xl mx-auto w-full px-4 py-2 md:py-4">
+      <div className="flex-1 flex flex-col items-center max-w-7xl mx-auto w-full px-6 py-6 md:py-12">
         <AnimatePresence mode="wait">
           {isSuccess ? (
             <motion.div 
@@ -314,44 +400,100 @@ export default function CheckoutPage() {
               className="space-y-8"
             >
               {/* Integrated Header */}
-              <div className="flex items-center justify-between mb-3 md:mb-5 px-2">
-                <button 
-                  onClick={() => navigate(-1)}
-                  className={cn(
-                    "flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] transition-all hover:opacity-70 group",
-                    isEditingAssets ? "text-white/60" : "text-gray-400"
-                  )}
-                >
-                  <div className={cn(
-                    "w-8 h-8 rounded-full flex items-center justify-center transition-all",
-                    isEditingAssets ? "bg-white/5 border border-white/10" : "bg-white border border-gray-100 shadow-sm"
-                  )}>
-                    <ChevronLeft size={14} strokeWidth={3} className="text-current" />
-                  </div>
-                  <span>Back</span>
-                </button>
-
+              <div className="flex items-center justify-between mb-2 md:mb-4 px-2">
                 <Link to="/" className="flex items-center gap-4 group">
-                  <div className="flex flex-col items-end">
+                  <div className={cn(
+                    "w-8 h-8 rounded-xl overflow-hidden p-1.5 group-hover:scale-105 transition-transform",
+                    isEditingAssets ? "bg-white/10 border border-white/10" : "bg-white border border-gray-100 shadow-lg shadow-black/5"
+                  )}>
+                    <img src={LOGO_URL} alt="Logo" className="w-full h-full object-contain" />
+                  </div>
+                  <div className="flex flex-col items-start translate-y-[1px]">
                     <span className={cn(
                       "text-[10px] sm:text-[11px] font-black uppercase tracking-[0.3em]",
                       isEditingAssets ? "text-white" : "text-heading"
                     )}>Arham Builds</span>
                     <div className="flex items-center gap-1.5 mt-0.5">
                       <ShieldCheck size={10} className="text-primary" />
-                      <span className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-400">Secure Checkout</span>
+                      <span className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-400">Secure Payment Checkout</span>
                     </div>
                   </div>
-                  <div className={cn(
-                    "w-10 h-10 rounded-2xl overflow-hidden p-1.5 group-hover:scale-105 transition-transform",
-                    isEditingAssets ? "bg-white/10 border border-white/10" : "bg-white border border-gray-100 shadow-lg shadow-black/5"
-                  )}>
-                    <img src={LOGO_URL} alt="Logo" className="w-full h-full object-contain" />
-                  </div>
                 </Link>
+
+                <button 
+                  onClick={() => navigate(-1)}
+                  className={cn(
+                    "flex items-center justify-center p-2 rounded-full transition-all hover:opacity-70",
+                    isEditingAssets ? "bg-white/5 border border-white/10 text-white/60" : "bg-white border border-gray-100 text-gray-400 shadow-sm"
+                  )}
+                >
+                  <X size={18} strokeWidth={2.5} />
+                </button>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+              <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start w-full">
+                {/* Vertical Progress Stepper - Hidden on Mobile */}
+                <div className="hidden lg:flex flex-col gap-12 pt-10 w-32 shrink-0">
+                  {/* Step 1 */}
+                  <div className="flex items-center gap-4 relative">
+                    <div className={cn(
+                      "w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all duration-500 relative z-10 shrink-0",
+                      isContactInfoValid 
+                        ? (isEditingAssets ? "bg-emerald-500/10 border-emerald-500 text-emerald-500" : "bg-emerald-50 border-emerald-500 text-emerald-500")
+                        : (isEditingAssets ? "bg-primary border-primary text-white shadow-lg shadow-primary/20" : "bg-primary border-primary text-white shadow-lg shadow-primary/20")
+                    )}>
+                      {isContactInfoValid ? <Check size={14} strokeWidth={4} /> : <span className="text-[10px] font-black">01</span>}
+                    </div>
+                    <span className={cn(
+                      "text-[10px] font-black uppercase tracking-widest transition-colors duration-500 truncate",
+                      isContactInfoValid ? "text-primary/100" : "text-primary/100"
+                    )}>Details</span>
+                    <div className={cn(
+                      "absolute top-8 left-4 w-[1px] h-12 transition-colors duration-500", 
+                      isContactInfoValid ? "bg-emerald-500/20" : (isEditingAssets ? "bg-white/5" : "bg-gray-100")
+                    )}></div>
+                  </div>
+
+                  {/* Step 2 */}
+                  <div className="flex items-center gap-4 relative">
+                    <div className={cn(
+                      "w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all duration-500 relative z-10 shrink-0",
+                      isTermsAccepted 
+                        ? (isEditingAssets ? "bg-emerald-500/10 border-emerald-500 text-emerald-500" : "bg-emerald-50 border-emerald-500 text-emerald-500")
+                        : (isContactInfoValid 
+                            ? (isEditingAssets ? "bg-primary border-primary text-white" : "bg-primary border-primary text-white")
+                            : (isEditingAssets ? "bg-white/5 border-white/10 text-white/20" : "bg-white border-gray-200 text-gray-300"))
+                    )}>
+                      {isTermsAccepted ? <Check size={14} strokeWidth={4} /> : <span className="text-[10px] font-black">02</span>}
+                    </div>
+                    <span className={cn(
+                      "text-[10px] font-black uppercase tracking-widest transition-colors duration-500 truncate",
+                      isTermsAccepted || isContactInfoValid ? "text-primary/100" : "text-primary/40"
+                    )}>Review</span>
+                    <div className={cn(
+                      "absolute top-8 left-4 w-[1px] h-12 transition-colors duration-500",
+                      isTermsAccepted ? "bg-emerald-500/20" : (isEditingAssets ? "bg-white/5" : "bg-gray-100")
+                    )}></div>
+                  </div>
+
+                  {/* Step 3 */}
+                  <div className="flex items-center gap-4 relative">
+                    <div className={cn(
+                      "w-8 h-8 rounded-full border-2 flex items-center justify-center relative z-10 shadow-lg shrink-0 transition-all duration-500",
+                      isFormValid 
+                        ? "bg-primary border-primary text-white shadow-primary/30" 
+                        : (isEditingAssets ? "bg-white/5 border-white/10 text-white/20" : "bg-white border-gray-200 text-gray-300")
+                    )}>
+                      <span className="text-[10px] font-black">03</span>
+                    </div>
+                    <span className={cn(
+                      "text-[10px] font-black uppercase tracking-widest transition-colors duration-500 truncate",
+                      isFormValid ? "text-primary" : "text-primary/40"
+                    )}>Checkout</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start w-full transition-all duration-500">
               {/* Left Column */}
               <div className="lg:col-span-7 space-y-6">
                 <motion.div
@@ -364,19 +506,19 @@ export default function CheckoutPage() {
                       : "bg-white card-shadow"
                   )}
                 >
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                      <User size={16} />
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                      <User size={14} />
                     </div>
                     <div>
                       <h2 className={cn(
-                        "text-sm md:text-base font-black uppercase tracking-tighter",
+                        "text-xs md:text-sm font-black uppercase tracking-tighter",
                         isEditingAssets ? "text-white" : "text-heading"
                       )}>Contact Information</h2>
                     </div>
                   </div>
 
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {/* Full Name */}
                     <div className="space-y-1">
                       <div className="flex justify-between items-center px-1">
@@ -435,14 +577,14 @@ export default function CheckoutPage() {
                           <button 
                             onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
                             className={cn(
-                              "h-[46px] px-4 rounded-2xl border transition-all duration-300 flex items-center gap-2",
+                              "h-[46px] px-3.5 rounded-2xl border transition-all duration-300 flex items-center gap-2",
                               isEditingAssets 
                                 ? "bg-[#0f1115] border-gray-800 text-white" 
-                                : "bg-gray-100 border-gray-100 text-gray-900"
+                                : "bg-gray-100 border-gray-100 text-gray-900 shadow-sm"
                             )}
                           >
-                            <span className="text-lg leading-none">{selectedCountry.flag}</span>
-                            <ChevronDown size={12} className="opacity-40" />
+                            <span className={cn("fi", `fi-${selectedCountry.code.toLowerCase()}`, "text-lg shadow-sm")}></span>
+                            <ChevronDown size={10} className="opacity-40" />
                           </button>
                           
                           <AnimatePresence>
@@ -454,7 +596,7 @@ export default function CheckoutPage() {
                                   animate={{ opacity: 1, y: 0, scale: 1 }}
                                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
                                   className={cn(
-                                    "absolute top-[calc(100%+10px)] left-0 w-64 z-50 rounded-2xl shadow-2xl p-2 animate-glass overflow-hidden",
+                                    "absolute top-[calc(100%+10px)] left-0 w-64 z-50 rounded-2xl shadow-2xl p-2 animate-glass overflow-y-auto max-h-72",
                                     isEditingAssets ? "bg-[#16181b] border border-gray-800" : "bg-white border border-gray-100"
                                   )}
                                 >
@@ -466,14 +608,14 @@ export default function CheckoutPage() {
                                         setIsCountryDropdownOpen(false);
                                       }}
                                       className={cn(
-                                        "w-full flex items-center justify-between p-3.5 rounded-xl transition-all duration-300 text-left",
+                                        "w-full flex items-center justify-between p-3 rounded-xl transition-all duration-300 text-left mb-1 last:mb-0",
                                         isEditingAssets ? "hover:bg-white/5" : "hover:bg-primary/5",
                                         selectedCountry.code === country.code && (isEditingAssets ? "bg-white/10" : "bg-primary/5 text-primary")
                                       )}
                                     >
                                       <div className="flex items-center gap-3">
-                                        <span className="text-lg">{country.flag}</span>
-                                        <span className="text-xs font-black uppercase tracking-widest">{country.name}</span>
+                                        <span className={cn("fi", `fi-${country.code.toLowerCase()}`, "text-xl shadow-sm min-w-[1.5rem] h-4")}></span>
+                                        <span className="text-[10px] font-black uppercase tracking-[0.1em]">{country.name}</span>
                                       </div>
                                       <span className="text-[9px] opacity-40 font-black">{country.dialCode}</span>
                                     </button>
@@ -498,28 +640,49 @@ export default function CheckoutPage() {
                                 : "bg-gray-50 border-gray-100 text-gray-900 placeholder:text-gray-300 focus:border-primary/30 focus:ring-primary/5"
                             )}
                             value={formData.phone}
-                            onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                            onChange={(e) => {
+                              const val = e.target.value.replace(/\D/g, '');
+                              if (val.length <= selectedCountry.phoneLength) {
+                                setFormData({...formData, phone: val});
+                              }
+                            }}
+                            maxLength={selectedCountry.phoneLength}
                           />
                         </div>
                       </div>
                     </div>
 
-                    <div className="pt-3 border-t border-dashed border-gray-200 dark:border-gray-800">
-                      <label className="flex items-center gap-4 cursor-pointer group">
+                    <div className="pt-2 border-t border-dashed border-gray-200 dark:border-gray-800">
+                      <label className={cn(
+                        "flex items-center gap-4 group transition-all duration-300",
+                        !isContactInfoValid ? "opacity-30 cursor-not-allowed grayscale" : "cursor-pointer"
+                      )}>
                         <div className="relative">
                           <input 
                             type="checkbox"
                             className="peer sr-only"
                             checked={isTermsAccepted}
-                            onChange={(e) => setIsTermsAccepted(e.target.checked)}
+                            onChange={(e) => {
+                              if (isContactInfoValid) {
+                                setIsTermsAccepted(e.target.checked);
+                              }
+                            }}
+                            disabled={!isContactInfoValid}
                           />
                           <div className={cn(
-                            "w-6 h-6 rounded-lg border transition-all duration-300 flex items-center justify-center",
+                            "w-6 h-6 rounded-lg border-2 transition-all duration-300 flex items-center justify-center",
                             isEditingAssets 
-                              ? "border-gray-800 bg-gray-900 peer-checked:bg-primary peer-checked:border-primary" 
-                              : "border-gray-200 bg-white peer-checked:bg-primary peer-checked:border-primary"
+                              ? "border-gray-800 bg-gray-900 peer-checked:border-primary peer-checked:bg-primary/10" 
+                              : "border-gray-200 bg-white peer-checked:border-primary peer-checked:bg-primary/5 shadow-sm"
                           )}>
-                            <Check size={14} strokeWidth={4} className="text-white opacity-0 peer-checked:opacity-100 scale-50 peer-checked:scale-100 transition-transform" />
+                            <Check 
+                              size={14} 
+                              strokeWidth={5} 
+                              className={cn(
+                                "text-black transition-all duration-300",
+                                isTermsAccepted ? "opacity-100 scale-110" : "opacity-0 scale-50"
+                              )} 
+                            />
                           </div>
                         </div>
                         <span className={cn(
@@ -534,7 +697,7 @@ export default function CheckoutPage() {
                 </motion.div>
                 
                 <div className={cn(
-                  "p-4 rounded-[1.5rem] border transition-all duration-300",
+                  "p-3 rounded-[1.2rem] border transition-all duration-300",
                   isEditingAssets ? "bg-white/5 border-white/10 text-white/40" : "bg-gray-100/50 border-gray-100 text-gray-400"
                 )}>
                   <div className="flex items-center gap-3 mb-1">
@@ -550,7 +713,7 @@ export default function CheckoutPage() {
               {/* Right Column: Order Summary */}
               <div className="lg:col-span-5 space-y-3 animate-slide-up delay-300">
                 <div className={cn(
-                  "p-5 md:p-6 rounded-[2rem] transition-all duration-500 overflow-hidden relative",
+                  "p-4 md:p-5 rounded-[1.5rem] transition-all duration-500 overflow-hidden relative",
                   isEditingAssets 
                     ? "bg-[#16181b] border border-gray-800 shadow-[20px_20px_40px_rgba(0,0,0,0.4)]" 
                     : "bg-white card-shadow"
@@ -581,10 +744,10 @@ export default function CheckoutPage() {
                     </div>
                   </div>
 
-                  <div className={cn("h-[1px] my-4 transition-colors", isEditingAssets ? "bg-gray-800" : "bg-gray-100")}></div>
+                  <div className={cn("h-[1px] my-3 transition-colors", isEditingAssets ? "bg-gray-800" : "bg-gray-100")}></div>
 
                   {/* Coupon Section */}
-                  <div className="space-y-2 mb-4">
+                  <div className="space-y-2 mb-3">
                     {product?.section === 'Templates' && (
                       <div>
                         <div className="flex items-center gap-2 mb-1.5 px-1">
@@ -614,7 +777,20 @@ export default function CheckoutPage() {
                     )}
 
                     <div className="space-y-1.5">
-                      <span className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-400 px-1">Have a coupon code?</span>
+                      <div className="flex items-center justify-between mb-1 px-1">
+                        <span className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-400">Coupon</span>
+                        {appliedCoupon && (
+                          <button 
+                            onClick={handleRemoveCoupon}
+                            className="flex items-center gap-1.5 text-[8px] font-black uppercase tracking-[0.1em] text-red-500 hover:text-red-600 transition-colors"
+                          >
+                            <div className="w-3.5 h-3.5 rounded-full border border-red-500/30 flex items-center justify-center">
+                              <div className="w-1.5 h-[1.5px] bg-red-500" />
+                            </div>
+                            Remove Applied
+                          </button>
+                        )}
+                      </div>
                       <div className="flex gap-2">
                         <input 
                           type="text"
@@ -648,7 +824,7 @@ export default function CheckoutPage() {
                   {/* Pricing Details */}
                   <div className="space-y-3">
                     <div className={cn(
-                      "p-5 rounded-[2rem] space-y-3",
+                      "p-4 rounded-[1.5rem] space-y-2",
                       isEditingAssets ? "bg-white/5 border border-white/5" : "bg-[#f8f9fb]"
                     )}>
                       <div className="flex justify-between items-center text-[11px] font-bold tracking-tight text-gray-500">
@@ -725,8 +901,9 @@ export default function CheckoutPage() {
                 </div>
               </div>
             </div>
-            </motion.div>
-          )}
+          </div>
+        </motion.div>
+      )}
         </AnimatePresence>
       </div>
 
