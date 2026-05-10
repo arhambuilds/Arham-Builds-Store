@@ -399,9 +399,7 @@ export default function ProductDetailPage() {
                 <div className="flex flex-col gap-4">
                   <button 
                     onClick={() => {
-                      if (product.checkoutUrl) {
-                        window.open(product.checkoutUrl, '_blank');
-                      }
+                      navigate(`/checkout?id=${product.id}`);
                     }}
                     disabled={isOutOfStock}
                     className={cn(

@@ -384,9 +384,7 @@ export default function TemplateDetailPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <button 
                     onClick={() => {
-                      if (product.checkoutUrl) {
-                        window.open(product.checkoutUrl, '_blank');
-                      }
+                      navigate(`/checkout?id=${product.id}`);
                     }}
                     disabled={isOutOfStock}
                     className={cn(

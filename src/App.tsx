@@ -103,9 +103,12 @@ export default function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/terms-conditions" element={<TermsConditionsPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
         </Routes>
       </div>
     </Router>
   );
 }
+
+import CheckoutPage from './components/CheckoutPage';
 
