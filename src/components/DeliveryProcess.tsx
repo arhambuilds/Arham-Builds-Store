@@ -600,7 +600,7 @@ const DeliveryProcess: React.FC<DeliveryProcessProps> = ({
                   ) : (
                     <Download size={14} strokeWidth={3} />
                   )}
-                  {isGeneratingPDF ? 'GENERATING...' : 'GET ACCESS PDF'}
+                  {isGeneratingPDF ? 'DOWNLOADING...' : 'GET ACCESS PDF'}
                 </button>
               </div>
             </div>
