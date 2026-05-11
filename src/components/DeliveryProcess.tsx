@@ -726,51 +726,6 @@ const DeliveryProcess: React.FC<DeliveryProcessProps> = ({
               </div>
             </div>
 
-            {/* Next Steps & Policies (For Templates Only) */}
-            {firstItem?.section === 'Templates' && (
-              <div className="mt-8 space-y-6">
-                <div className="bg-emerald-50/50 rounded-[1.5rem] p-6 border border-emerald-100/50 relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:scale-110 transition-transform duration-500">
-                    <ClipboardEdit size={40} className="text-emerald-500" />
-                  </div>
-                  <h4 className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    Immediate Next Steps
-                  </h4>
-                  <p className="text-[11px] md:text-xs text-gray-600 font-medium leading-relaxed mb-4">
-                    {firstItem.productAccessInstructions || "Please submit the customization form to get started with your website."}
-                  </p>
-                  <a 
-                    href={firstItem.productAccessUrl || "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 w-full py-3 bg-emerald-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-600 transition-all active:scale-[0.98] shadow-sm shadow-emerald-200"
-                  >
-                    Submit Customization Form
-                    <Check size={14} strokeWidth={3} />
-                  </a>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="h-[1px] flex-1 bg-gray-100" />
-                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] whitespace-nowrap">Store Policies</h4>
-                    <div className="h-[1px] flex-1 bg-gray-100" />
-                  </div>
-                  <div className="grid grid-cols-1 gap-2.5">
-                    {TEMPLATE_STORE_POLICIES.map((policy, idx) => (
-                      <div key={idx} className="flex gap-3 items-start group">
-                        <div className="w-1.5 h-1.5 rounded-full bg-pink-400/30 mt-1.5 shrink-0 group-hover:bg-primary transition-colors" />
-                        <p className="text-[9px] md:text-[10px] text-gray-500 font-medium leading-normal">
-                          {policy}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
             <div className="mt-auto pt-8 flex flex-col items-center gap-2">
                <div className="flex items-center justify-center gap-2 opacity-40 select-none grayscale hover:grayscale-0 transition-all hover:opacity-100 cursor-default">
                  <span className="text-[7px] font-black uppercase tracking-[0.2em] text-gray-400">Secured By</span>
