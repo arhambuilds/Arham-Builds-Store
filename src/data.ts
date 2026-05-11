@@ -28,6 +28,9 @@ export interface Product {
   whatYouReceive?: string[];
   whyChooseThisPack?: { title: string; description: string; icon: string }[];
   whereCanYouUseIt?: { title: string; description: string; icon: string }[];
+  coupons?: { code: string; discount: number }[];
+  productAccessUrl?: string;
+  productAccessInstructions?: string;
 }
 
 export interface PricingPlan {
@@ -137,6 +140,27 @@ export const TERMS_CONDITIONS = {
   `
 };
 
+export const TEMPLATE_STORE_POLICIES = [
+  "After purchase, you will receive a PDF containing your customization form link along with your payment receipt for verification and records.",
+  "Submit your photos, text, and preferences through the customization form to start the website creation process.",
+  "Your personalized website is manually designed and delivered within 24 hours after successful form submission.",
+  "Your live website URL and QR code will be shared directly through email or chat.",
+  "Your photos and content are used only to create your website and are securely deleted after the website validity period ends.",
+  "We only collect basic details like name, email, and phone number for order verification and support. Sensitive payment information is never stored.",
+  "Due to the nature of digital products, refunds or cancellations are not available after payment confirmation unless delivery is delayed beyond 24 hours.",
+  "Your website hosting remains active for 2 months, with extension or renewal options available before expiry."
+];
+
+export const EDITING_ASSETS_STORE_POLICIES = [
+  "Secure payments are processed through Razorpay with instant digital delivery after successful payment.",
+  "Customers receive a secure PDF containing a private Google Drive download link and payment receipt.",
+  "We only collect basic details like name, email, and phone number for order verification and support. Sensitive payment information is never stored.",
+  "Purchased assets can be used for personal and client projects, but resale, redistribution, or sharing is strictly prohibited.",
+  "Due to the digital nature of the products, all sales are final and refunds/cancellations are not available after delivery.",
+  "Support will be provided for invalid links, corrupted files, or technical download issues.",
+  "All products come with lifetime access. Customers should download and back up their files for permanent use."
+];
+
 export const HERO_DATA = {
   name: 'Arham Adib',
   roles: ['a Web Designer', 'a Video Editor.', 'a Freelancer.'],
@@ -173,7 +197,13 @@ export const PRODUCTS: Product[] = [
       'Personalize it using your own images & text',
       'Ready-made Default Link / QR Code',
       'Order cannot be cancelled after placed!'
-    ]
+    ],
+    coupons: [
+      { code: 'SAHIBA10', discount: 10 },
+      { code: 'HBDLOVE', discount: 15 }
+    ],
+    productAccessUrl: 'https://anujbuilds.in/',
+    productAccessInstructions: 'Open the link and submit the Cusomization form to start 24 hrs delivry timeer.'
   },
   {
     id: 'p2',
@@ -198,7 +228,13 @@ export const PRODUCTS: Product[] = [
       { name: 'Fully Deployed Website', description: 'The website will be deployed as per your request within 12-24 hours.' }
     ],
     demoUrl: 'https://birthday-v3-navy.vercel.app/',
-    whatYouReceive: ['Custom Link', 'Photo integration', '24h Delivery']
+    whatYouReceive: ['Custom Link', 'Photo integration', '24h Delivery'],
+    coupons: [
+      { code: 'BOD10', discount: 10 },
+      { code: 'V1OFF', discount: 12 }
+    ],
+    productAccessUrl: 'https://anujbuilds.in/',
+    productAccessInstructions: 'Open the link and submit the Cusomization form to start 24 hrs delivry timeer.'
   },
   {
     id: 'p3',
@@ -249,7 +285,13 @@ export const PRODUCTS: Product[] = [
     ],
     demoUrl: 'https://happy-new-year-madam-jii.vercel.app/',
     stockCount: 0,
-    whatYouReceive: ['Full deployment', 'Responsive design']
+    whatYouReceive: ['Full deployment', 'Ballance responsive design'],
+    coupons: [
+      { code: 'NEWYEAR20', discount: 20 },
+      { code: 'CELEBRATE', discount: 10 }
+    ],
+    productAccessUrl: 'https://anujbuilds.in/',
+    productAccessInstructions: 'Open the link and submit the Cusomization form to start 24 hrs delivry timeer.'
   },
   {
     id: 'f1',
@@ -267,7 +309,9 @@ export const PRODUCTS: Product[] = [
       { name: '100+ Icons', description: 'SVG, PNG, and AI formats included' },
       { name: 'Scaleable', description: 'Vector based designs for any size' }
     ],
-    whatYouReceive: ['Icon Bundle (ZIP)', 'License File']
+    whatYouReceive: ['Icon Bundle (ZIP)', 'License File'],
+    productAccessUrl: 'https://t.me/arhambuilds',
+    productAccessInstructions: 'Join our Telegram channel to download your free icon pack.'
   },
   {
     id: 'a1',
@@ -279,24 +323,27 @@ export const PRODUCTS: Product[] = [
     thumbnailUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80&w=800',
     videoUrl: 'https://ik.imagekit.io/3kka2lnk8/KAHANI%20SUNO%20VIDEO%20PREVIEW.mp4',
     section: 'Editing Assets',
-    categories: [],
+    categories: ['SFX'],
     badge: 'Latest',
     checkoutUrl: 'https://superprofile.bio/vp/sfx-pack',
     features: [
       { name: '50+ High Fidelity SFX', description: 'Recorded at 96kHz 24-bit' },
       { name: 'Royalty Free', description: 'Use in any project without attribution' }
     ],
-    whatYouReceive: ['WAV & MP3 Files', 'Metadata Guide'],
+    whatYouReceive: ['Audio Pack (WAV)', 'Usage Guide'],
     whyChooseThisPack: [
-      { title: 'Trusted by Top Creators', description: 'Used by India’s biggest names in content creation.', icon: 'users' },
-      { title: 'Curated by Kavangun', description: 'Years of expertise packed into one kit.', icon: 'award' },
-      { title: 'All-in-One Toolkit', description: 'Everything you need to produce premium content.', icon: 'layoutGrid' }
+      { title: 'Crystal Clear Audio', description: 'Recorded with high-end microphones.', icon: 'music' },
+      { title: 'Versatile Uses', description: 'Perfect for games, movies, and YouTube.', icon: 'speaker' },
+      { title: 'Instant Access', description: 'Download immediately after purchase.', icon: 'download' }
     ],
     whereCanYouUseIt: [
       { title: 'Gaming Videos', description: 'Amp up the energy and excitement.', icon: 'gamepad2' },
       { title: 'Documentaries & Vlogs', description: 'Add depth, polish, and emotion.', icon: 'video' },
       { title: 'Reactions & Edits', description: 'Stand out with humor and style.', icon: 'smile' }
-    ]
+    ],
+    coupons: [],
+    productAccessUrl: 'https://chatgpt.com/images',
+    productAccessInstructions: 'Open the link and download the zip and extract your asset'
   },
   {
     id: 'a2',
@@ -324,7 +371,12 @@ export const PRODUCTS: Product[] = [
       { title: 'YouTube Intros', description: 'Make your channel stand out instantly.', icon: 'video' },
       { title: 'Social Media Ads', description: 'High-converting animations for marketing.', icon: 'trending-up' },
       { title: 'Stream Overlays', description: 'Perfect for Twitch and live streaming.', icon: 'gamepad2' }
-    ]
+    ],
+    coupons: [
+      { code: 'MOTION20', discount: 20 }
+    ],
+    productAccessUrl: 'https://chatgpt.com/images',
+    productAccessInstructions: 'Open the link and download the animation assets bundle.'
   },
   {
     id: 'a3',
@@ -352,7 +404,9 @@ export const PRODUCTS: Product[] = [
       { title: 'Short Films', description: 'Give your story a professional look.', icon: 'video' },
       { title: 'Travel Vlogs', description: 'Bring out the vibrant colors of your trips.', icon: 'globe' },
       { title: 'Wedding Videos', description: 'Classic, timeless look for special moments.', icon: 'heart' }
-  ]
+  ],
+  productAccessUrl: 'https://chatgpt.com/images',
+  productAccessInstructions: 'Open the link and download the Cinematic LUTs package.'
   },
   {
     id: 'f2',
@@ -370,7 +424,12 @@ export const PRODUCTS: Product[] = [
       { name: 'Editable Canva Link', description: 'Quick and easy customizations' },
       { name: '15+ Templates', description: 'Posts, stories, and cover designs' }
     ],
-    whatYouReceive: ['Access Link', 'Step Guide']
+    whatYouReceive: ['Access Link', 'Step Guide'],
+    coupons: [
+      { code: 'SOCIAL25', discount: 25 }
+    ],
+    productAccessUrl: 'https://t.me/arhambuilds',
+    productAccessInstructions: 'Join our Telegram channel to access the Social Media Kit and Guide.'
   }
 ];
 

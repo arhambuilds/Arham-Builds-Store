@@ -21,6 +21,7 @@ import {
   Download,
   Gavel
 } from 'lucide-react';
+import DeliveryProcess from './DeliveryProcess';
 import { PRODUCTS, Product } from '../data';
 import { cn } from '../lib/utils';
 
@@ -119,11 +120,10 @@ const COUNTRIES: Country[] = [
   { code: 'VN', name: 'Vietnam', flag: '🇻🇳', dialCode: '+84', phoneLength: 9 },
 ];
 
-const AVAILABLE_COUPONS = [
-  { code: 'MOMENT10', discount: 0.1 },
-  { code: 'ARHAMBUILD10', discount: 0.1 },
-  { code: 'TRYARHAM', discount: 0.05 },
-];
+interface Coupon {
+  code: string;
+  discount: number;
+}
 
 export default function CheckoutPage() {
   const [searchParams] = useSearchParams();
@@ -133,12 +133,13 @@ export default function CheckoutPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [couponCode, setCouponCode] = useState('');
-  const [appliedCoupon, setAppliedCoupon] = useState<typeof AVAILABLE_COUPONS[0] | null>(null);
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
   const [showFullTerms, setShowFullTerms] = useState(false);
   const [hasSeenTermsAuto, setHasSeenTermsAuto] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [razorpayPaymentId, setRazorpayPaymentId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -186,7 +187,7 @@ export default function CheckoutPage() {
     
     let promoDiscount = 0;
     if (appliedCoupon) {
-      promoDiscount = Math.round(subtotal * appliedCoupon.discount);
+      promoDiscount = Math.round(subtotal * (appliedCoupon.discount / 100));
     }
     
     const grandTotal = subtotal - promoDiscount;
@@ -244,8 +245,14 @@ export default function CheckoutPage() {
   }, [showFullTerms]);
 
   const handleApplyCoupon = (codeToApply?: string) => {
+    if (!product || !product.coupons) {
+      alert('Invalid coupon code.');
+      return;
+    }
+    
     const code = (codeToApply || couponCode).toUpperCase();
-    const found = AVAILABLE_COUPONS.find(c => c.code === code);
+    const found = product.coupons.find(c => c.code.toUpperCase() === code);
+    
     if (found) {
       setAppliedCoupon(found);
       setCouponCode(found.code);
@@ -298,6 +305,7 @@ export default function CheckoutPage() {
       image: LOGO_URL,
       handler: function (response: any) {
         console.log("Payment Success:", response);
+        setRazorpayPaymentId(response.razorpay_payment_id);
         setIsProcessing(false);
         setIsSuccess(true);
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -312,7 +320,7 @@ export default function CheckoutPage() {
         section: product?.section,
       },
       theme: {
-        color: "#ff0044", // Primary brand color
+        color: "#ff014f", // Primary brand color (#ff014f)
       },
       modal: {
         ondismiss: function() {
@@ -349,69 +357,27 @@ export default function CheckoutPage() {
       "min-h-screen transition-colors duration-500 font-sans flex flex-col no-scrollbar bg-[#f4f5f8]"
     )}>
       {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center max-w-7xl mx-auto w-full px-6 py-6 md:py-12">
+      <div className={cn(
+        "flex-1 flex flex-col items-center max-w-7xl mx-auto w-full px-6",
+        isSuccess ? "py-4 md:py-8" : "py-6 md:py-12"
+      )}>
         <AnimatePresence mode="wait">
           {isSuccess ? (
             <motion.div 
               key="success"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="max-w-xl mx-auto"
+              className="w-full"
             >
-              <div className="p-10 md:p-16 rounded-[3rem] text-center space-y-8 overflow-hidden relative bg-white card-shadow">
-                {/* Decorative background elements if light mode */}
-                <div className="absolute top-0 left-0 w-full h-2 bg-primary"></div>
-                
-                <div className="flex justify-center">
-                  <div className="w-24 h-24 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500 relative">
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.2 }}
-                    >
-                      <Check size={48} strokeWidth={3} />
-                    </motion.div>
-                    <motion.div
-                      animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0, 0.3] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                      className="absolute inset-0 rounded-full bg-emerald-500/20"
-                    ></motion.div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter text-heading">Access Guaranteed!</h2>
-                  <p className="text-xs md:text-sm font-bold uppercase tracking-widest opacity-60 text-heading">Your order was processed successfully</p>
-                </div>
-
-                <div className="p-8 rounded-[2rem] space-y-4 bg-gray-50">
-                  <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.2em] opacity-40">
-                    <span>Order Profile</span>
-                    <span>#{Math.floor(Math.random() * 100000).toString().padStart(5, '0')}</span>
-                  </div>
-                  <div className="h-[1px] bg-gray-200 dark:bg-gray-800 border-dashed border-t"></div>
-                  <div className="grid grid-cols-2 gap-4 text-left">
-                    <div>
-                      <div className="text-[8px] font-black uppercase tracking-widest opacity-40 mb-1">Customer</div>
-                      <div className="text-xs font-black truncate text-heading">{formData.fullName}</div>
-                    </div>
-                    <div>
-                      <div className="text-[8px] font-black uppercase tracking-widest opacity-40 mb-1">Email</div>
-                      <div className="text-xs font-black truncate text-heading">{formData.email}</div>
-                    </div>
-                  </div>
-                </div>
- 
-                <div className="flex flex-col gap-4">
-                  <button 
-                    onClick={() => navigate('/')}
-                    className="w-full h-16 rounded-2xl bg-primary text-white font-black uppercase tracking-[0.2em] text-xs hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20"
-                  >
-                    Go to Dashboard
-                  </button>
-                  <p className="text-[9px] font-bold uppercase tracking-widest opacity-40 text-heading">A confirmation email has been sent to your inbox</p>
-                </div>
-              </div>
+              <DeliveryProcess 
+                onBack={() => navigate('/')}
+                items={product ? [product] : []}
+                customerName={formData.fullName}
+                customerEmail={formData.email}
+                customerPhone={selectedCountry.dialCode + " " + formData.phone}
+                orderId={razorpayPaymentId || undefined}
+                coupon={appliedCoupon ? { code: appliedCoupon.code, discount: appliedCoupon.discount } : undefined}
+              />
             </motion.div>
           ) : (
             <motion.div 
@@ -764,14 +730,14 @@ export default function CheckoutPage() {
 
                           {/* Coupon Section */}
                           <div className="space-y-2 mb-3">
-                            {product?.section === 'Templates' && (
+                            {product?.coupons && product.coupons.length > 0 && (
                               <div>
                                 <div className="flex items-center gap-2 mb-1.5 px-1">
                                   <Tag size={10} className="text-gray-400" />
                                   <span className="text-[8px] font-black uppercase tracking-[0.2em] text-gray-400">Inventory Coupons</span>
                                 </div>
                                 <div className="flex flex-wrap gap-1.5">
-                                  {AVAILABLE_COUPONS.map((c) => (
+                                  {product.coupons.map((c) => (
                                     <button
                                       key={c.code}
                                       onClick={() => handleApplyCoupon(c.code)}
