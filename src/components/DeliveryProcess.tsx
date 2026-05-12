@@ -379,16 +379,10 @@ const DeliveryProcess: React.FC<DeliveryProcessProps> = ({
       doc.text("CATEGORY:", 20, 80);
       doc.setFont("helvetica", "normal");
       doc.text(firstItem.categories?.join(', ') || firstItem.category || 'General', 60, 80);
-      doc.setFontSize(9);
-      doc.setTextColor(100);
       doc.setFont("helvetica", "bold");
-      doc.text("AMOUNT PAID", 15, 85);
-      doc.setFontSize(14);
-      doc.setTextColor(0);
-      doc.text(`INR ${totalPrice.toFixed(2)}`, 45, 85);
-      doc.setDrawColor(pinkColor[0], pinkColor[1], pinkColor[2]);
-      doc.setLineWidth(0.8);
-      doc.line(15, 88, 35, 88);
+      doc.text("AMOUNT PAID:", 20, 88);
+      doc.setTextColor(accentColorGuide[0], accentColorGuide[1], accentColorGuide[2]);
+      doc.text(`INR ${totalPrice.toFixed(2)}`, 60, 88);
 
       // Access Instructions
       doc.setFillColor(252, 242, 247);
