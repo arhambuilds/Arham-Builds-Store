@@ -19,7 +19,7 @@ import {
   Gift,
   Ticket,
   Package,
-  Video as VideoIcon
+  X
 } from 'lucide-react';
 import { db } from '../../lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
@@ -87,6 +87,7 @@ export default function ProductForm() {
 
   const [loading, setLoading] = useState(isEdit);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [previewMode, setPreviewMode] = useState(false);
   const [step, setStep] = useState(isEdit ? 2 : 1);
 
@@ -115,6 +116,7 @@ export default function ProductForm() {
           }
         } catch (error) {
           console.error('Error fetching product:', error);
+          setError('System failed to synchronize product metadata.');
         } finally {
           setLoading(false);
         }
@@ -137,6 +139,7 @@ export default function ProductForm() {
     let newValue: any = value;
     
     if (type === 'number') newValue = Number(value);
+    setError(null);
     
     setFormData(prev => {
       const updated = { ...prev, [name]: newValue };
@@ -147,9 +150,10 @@ export default function ProductForm() {
     });
   };
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSave = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setSaving(true);
+    setError(null);
     try {
       const productId = id || `p_${Date.now()}`;
       const payload = {
@@ -161,53 +165,73 @@ export default function ProductForm() {
       navigate(`/admin/products?section=${formData.section}`);
     } catch (error) {
       console.error('Error saving product:', error);
-      alert('Failed to save product. Check console for details.');
+      setError('Critical Error: Could not commit changes to the decentralized database.');
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) return <div className="text-center py-20 animate-pulse">Loading product details...</div>;
+  if (loading) return (
+    <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
+      <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest animate-pulse">Initializing Data Architect...</p>
+    </div>
+  );
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-5xl mx-auto space-y-12">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-white/5 pb-6">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/5 pb-10">
+        <div className="flex items-center gap-6">
           <button 
             onClick={() => navigate(-1)}
-            className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-full transition-all"
+            className="w-12 h-12 flex items-center justify-center bg-white/5 text-gray-500 hover:text-white hover:bg-white/10 rounded-2xl transition-all border border-white/5"
           >
             <ArrowLeft size={24} />
           </button>
           <div>
-            <h1 className="text-2xl font-bold">{isEdit ? 'Edit Product' : 'Create New Product'}</h1>
-            <p className="text-sm text-gray-500">{formData.section} Section</p>
+            <div className="flex items-center gap-2 mb-1">
+               <span className="text-[8px] font-black text-primary uppercase tracking-widest px-2 py-0.5 bg-primary/10 rounded border border-primary/20">{formData.section}</span>
+               <div className="w-1 h-1 rounded-full bg-white/20" />
+               <span className="text-[8px] font-black text-gray-600 uppercase tracking-widest">{isEdit ? 'Revision Mode' : 'New Deployment'}</span>
+            </div>
+            <h1 className="text-3xl font-black tracking-tighter text-white/90">{isEdit ? 'Modify Asset' : 'Deploy New Asset'}</h1>
           </div>
         </div>
         
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <button
             onClick={() => setPreviewMode(!previewMode)}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all border ${
+            className={`flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all border ${
               previewMode 
-                ? 'bg-primary/20 text-primary border-primary/20' 
-                : 'bg-white/5 text-gray-400 border-white/10 hover:text-white hover:bg-white/10'
+                ? 'bg-primary text-white border-primary shadow-2xl shadow-primary/30' 
+                : 'bg-white/[0.03] text-gray-500 border-white/5 hover:text-white hover:bg-white/10'
             }`}
           >
-            <Eye size={18} />
-            {previewMode ? 'Exit Preview' : 'Live Preview'}
+            {previewMode ? <X size={18} /> : <Eye size={18} />}
+            {previewMode ? 'Close Portal' : 'Live Preview'}
           </button>
           <button
-            onClick={handleSave}
+            onClick={() => handleSave()}
             disabled={saving}
-            className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-bold shadow-lg shadow-primary/25 hover:scale-105 transition-transform disabled:opacity-50 disabled:scale-100"
+            className="flex items-center justify-center gap-3 bg-[#00d084] text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl shadow-[#00d084]/20 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 group"
           >
-            {saving ? <RefreshCw className="animate-spin" size={18} /> : <Save size={18} />}
-            {isEdit ? 'Update Product' : 'Publish Product'}
+            {saving ? <RefreshCw className="animate-spin" size={18} /> : <Save size={18} className="group-hover:scale-110 transition-transform" />}
+            {isEdit ? 'Commit Changes' : 'Push To Live'}
           </button>
         </div>
       </div>
+
+      {error && (
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-5 bg-red-500/10 border border-red-500/20 rounded-[1.5rem] flex items-center gap-4 text-red-500"
+        >
+          <AlertCircle size={20} />
+          <p className="text-[10px] font-black uppercase tracking-wider">{error}</p>
+        </motion.div>
+      )}
 
       <AnimatePresence mode="wait">
         {step === 1 ? (
@@ -233,7 +257,7 @@ export default function ProductForm() {
                 },
                 { 
                   id: 'Editing Assets', 
-                  icon: VideoIcon, 
+                  icon: Video, 
                   label: 'Editing Assets', 
                   desc: 'SFX Packs, VFX presets, transitions' 
                 },

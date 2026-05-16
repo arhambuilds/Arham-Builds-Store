@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signInWithGoogle } from '../../lib/firebase';
 import { useAdmin } from '../../hooks/useAdmin';
@@ -9,6 +9,12 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const { isAdmin, loading: authLoading } = useAdmin();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAdmin) {
+      navigate('/admin');
+    }
+  }, [isAdmin, navigate]);
 
   const handleLogin = async () => {
     setLoading(true);
@@ -21,10 +27,6 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
-
-  if (isAdmin) {
-    navigate('/admin');
-  }
 
   return (
     <div className="min-h-screen bg-black flex flex-col items-center justify-center p-6 relative overflow-hidden">

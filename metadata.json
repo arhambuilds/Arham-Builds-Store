@@ -2,5 +2,5 @@
   "name": "Remix: Arham Builds - Premium Digital Store",
   "description": "India\u0027s #1 Premium Digital Store for high-performance templates and editing assets.",
   "requestFramePermissions": [],
-  "majorCapabilities": []
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

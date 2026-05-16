@@ -49,73 +49,96 @@ export default function Coupons() {
   };
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold mb-2">Coupons</h1>
-        <p className="text-gray-400">Create and manage global discount codes.</p>
+    <div className="space-y-12">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/5 pb-10">
+        <div>
+          <div className="flex items-center gap-3 mb-2">
+             <div className="w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center border border-primary/20">
+                <Ticket size={16} className="text-primary" />
+             </div>
+             <h1 className="text-4xl font-black tracking-tighter text-white/90">Coupons</h1>
+          </div>
+          <p className="text-gray-500 font-medium text-sm">Orchestrate global discount structures for your ecosystem.</p>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-1">
-          <form onSubmit={handleCreate} className="bg-white/5 border border-white/10 rounded-3xl p-6 space-y-6">
-            <h3 className="text-xl font-bold">New Coupon</h3>
-            <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Code</label>
-              <input
-                required
-                value={newCoupon.code}
-                onChange={e => setNewCoupon({ ...newCoupon, code: e.target.value })}
-                placeholder="PROMO20"
-                className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:border-primary transition-all"
-              />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div className="lg:col-span-4">
+          <form onSubmit={handleCreate} className="bg-white/5 border border-white/10 rounded-[2.5rem] p-10 space-y-8 shadow-2xl relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-[60px] -mr-16 -mt-16 pointer-events-none rounded-full" />
+            <h3 className="text-xl font-black tracking-tight text-white/90 relative z-10">New Strategy</h3>
+            <div className="space-y-6 relative z-10">
+              <div>
+                <label className="block text-[8px] font-black text-gray-600 uppercase tracking-[0.2em] mb-2.5">Promo Identifier</label>
+                <input
+                  required
+                  value={newCoupon.code}
+                  onChange={e => setNewCoupon({ ...newCoupon, code: e.target.value.toUpperCase() })}
+                  placeholder="e.g. ARCHITECT50"
+                  className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 text-sm font-black tracking-widest text-white focus:border-primary/50 focus:bg-black/60 transition-all uppercase placeholder:text-gray-800"
+                />
+              </div>
+              <div>
+                <label className="block text-[8px] font-black text-gray-600 uppercase tracking-[0.2em] mb-2.5">Discount Percentage</label>
+                <div className="relative">
+                  <input
+                    required
+                    type="number"
+                    value={newCoupon.discount || ''}
+                    onChange={e => setNewCoupon({ ...newCoupon, discount: Number(e.target.value) })}
+                    placeholder="20"
+                    className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 text-sm font-black text-white focus:border-primary/50 focus:bg-black/60 transition-all placeholder:text-gray-800"
+                  />
+                  <span className="absolute right-6 top-1/2 -translate-y-1/2 font-black text-gray-600">%</span>
+                </div>
+              </div>
+              <button
+                type="submit"
+                className="w-full flex items-center justify-center gap-3 bg-primary text-white py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 hover:scale-[1.02] active:scale-95 transition-all group/btn"
+              >
+                <Plus size={18} strokeWidth={3} className="group-hover/btn:rotate-90 transition-transform" />
+                Commit Coupon
+              </button>
             </div>
-            <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Discount (%)</label>
-              <input
-                required
-                type="number"
-                value={newCoupon.discount}
-                onChange={e => setNewCoupon({ ...newCoupon, discount: Number(e.target.value) })}
-                className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:border-primary transition-all"
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full flex items-center justify-center gap-2 bg-primary text-white py-4 rounded-xl font-bold shadow-lg shadow-primary/25 hover:scale-[1.02] transition-transform"
-            >
-              <Plus size={20} />
-              Create Coupon
-            </button>
           </form>
         </div>
 
-        <div className="lg:col-span-2 space-y-4">
-          <h3 className="text-lg font-bold">Active Coupons</h3>
+        <div className="lg:col-span-8 space-y-6">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-lg font-black tracking-tight text-white/40 uppercase tracking-[0.2em]">Active Assets</h3>
+            <span className="text-[10px] font-black text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">{coupons.length} CODES</span>
+          </div>
+          
           {loading ? (
-             <div className="h-40 bg-white/5 rounded-3xl animate-pulse" />
+             <div className="h-60 bg-white/5 rounded-[2.5rem] animate-pulse border border-white/5" />
           ) : coupons.length === 0 ? (
-            <div className="text-center py-20 bg-white/5 border border-dashed border-white/10 rounded-3xl">
-              <Ticket className="mx-auto text-gray-600 mb-4" size={48} />
-              <p className="text-gray-500">No active coupons found.</p>
+            <div className="text-center py-24 bg-white/[0.01] border-2 border-dashed border-white/5 rounded-[3rem]">
+              <Ticket className="mx-auto text-gray-800 mb-6" size={56} strokeWidth={1} />
+              <p className="text-gray-600 text-[10px] font-black uppercase tracking-widest">No promo strategies in the current deployment.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {coupons.map((coupon) => (
-                <div key={coupon.id} className="bg-white/5 border border-white/10 p-5 rounded-2xl flex items-center justify-between group">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
-                      <Ticket size={20} className="text-primary" />
+                <div key={coupon.id} className="bg-white/5 border border-white/5 p-6 rounded-[2rem] flex items-center justify-between group hover:bg-white/[0.08] hover:border-white/10 transition-all duration-500 hover:shadow-2xl">
+                  <div className="flex items-center gap-5">
+                    <div className="w-14 h-14 bg-primary/20 rounded-2xl flex items-center justify-center border border-primary/20 shadow-lg shadow-primary/10 group-hover:scale-110 transition-transform">
+                      <Ticket size={24} className="text-primary" />
                     </div>
                     <div>
-                      <p className="font-mono font-bold text-white tracking-widest">{coupon.code}</p>
-                      <p className="text-sm text-green-500 font-bold">{coupon.discount}% OFF</p>
+                      <p className="font-black text-lg text-white tracking-[0.2em] uppercase">{coupon.code}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                         <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-green-500/10 text-green-500 text-[8px] font-black uppercase tracking-widest border border-green-500/20">
+                            {coupon.discount}% SAVINGS
+                         </span>
+                      </div>
                     </div>
                   </div>
                   <button 
                     onClick={() => handleDelete(coupon.id)}
-                    className="p-3 text-red-500 hover:bg-red-500/10 rounded-xl opacity-0 group-hover:opacity-100 transition-all"
+                    className="w-12 h-12 flex items-center justify-center text-gray-600 hover:text-red-500 hover:bg-red-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-all border border-transparent hover:border-red-500/10"
+                    title="Terminate Strategy"
                   >
-                    <Trash2 size={18} />
+                    <Trash2 size={20} />
                   </button>
                 </div>
               ))}
