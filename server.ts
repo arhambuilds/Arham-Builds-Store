@@ -16,7 +16,9 @@ import {
   serverTimestamp,
   getDoc
 } from 'firebase/firestore';
-import firebaseConfig from './firebase-applet-config.json' assert { type: 'json' };
+import fs from 'fs';
+
+const firebaseConfig = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'firebase-applet-config.json'), 'utf-8'));
 
 async function startServer() {
   const app = express();
@@ -27,6 +29,11 @@ async function startServer() {
   const db = getFirestore(firebaseApp, (firebaseConfig as any).firestoreDatabaseId);
 
   app.use(express.json());
+
+  // Health Check
+  app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok' });
+  });
 
   // --- ADMIN API ---
   const ADMIN_USERNAME = 'arham2026';

@@ -10,6 +10,13 @@ export const AdminLogin: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [serverStatus, setServerStatus] = useState<'checking' | 'up' | 'down'>('checking');
+
+  useEffect(() => {
+    fetch('/api/health')
+      .then(r => r.ok ? setServerStatus('up') : setServerStatus('down'))
+      .catch(() => setServerStatus('down'));
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +59,13 @@ export const AdminLogin: React.FC = () => {
 
           <h1 className="text-4xl font-black text-slate-800 uppercase tracking-tighter mb-4">Admin Access</h1>
           <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px] mb-12">Arham Builds Store Management System</p>
+
+          {serverStatus === 'down' && (
+            <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-center gap-3 text-amber-700">
+              <ShieldAlert size={18} />
+              <p className="text-[10px] font-black uppercase text-left">Backend server is offline. Some features may not work.</p>
+            </div>
+          )}
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="relative group">
@@ -97,9 +111,15 @@ export const AdminLogin: React.FC = () => {
               onClick={async () => {
                 const { signInWithPopup, googleProvider } = await import('../../lib/firebase');
                 try {
-                  await signInWithPopup(auth, googleProvider);
-                  localStorage.setItem('arham_admin_session', 'true');
-                  navigate('/admin');
+                  const result = await signInWithPopup(auth, googleProvider);
+                  if (result.user.email === "alibabasports.in@gmail.com") {
+                    localStorage.setItem('arham_admin_session', 'true');
+                    localStorage.setItem('arham_admin_username', 'arham2026');
+                    localStorage.setItem('arham_admin_password', 'admin2026');
+                    navigate('/admin');
+                  } else {
+                    setError('Access Denied: You are not authorized.');
+                  }
                 } catch (e) {
                   console.error(e);
                   setError('Google Sign-In failed.');
