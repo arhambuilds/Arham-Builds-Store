@@ -1,0 +1,131 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "A digital product in the store",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "slug": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "currentPrice": { "type": "number" },
+        "originalPrice": { "type": "number" },
+        "thumbnailUrl": { "type": "string" },
+        "videoUrl": { "type": "string" },
+        "section": { "type": "string", "enum": ["Templates", "Editing Assets", "Freebies"] },
+        "categories": { "type": "array", "items": { "type": "string" } },
+        "badge": { "type": "string", "enum": ["Hot Sell", "Trending", "Latest", ""] },
+        "checkoutUrl": { "type": "string" },
+        "features": { 
+          "type": "array", 
+          "items": { 
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "demoUrl": { "type": "string" },
+        "stockCount": { "type": "number" },
+        "whatYouReceive": { "type": "array", "items": { "type": "string" } },
+        "whyChooseThisPack": { 
+          "type": "array", 
+          "items": { 
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "description": { "type": "string" },
+              "icon": { "type": "string" }
+            }
+          }
+        },
+        "whereCanYouUseIt": { 
+          "type": "array", 
+          "items": { 
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "description": { "type": "string" },
+              "icon": { "type": "string" }
+            }
+          }
+        },
+        "coupons": { 
+          "type": "array", 
+          "items": { 
+            "type": "object",
+            "properties": {
+              "code": { "type": "string" },
+              "discount": { "type": "number" }
+            }
+          }
+        },
+        "productAccessUrl": { "type": "string" },
+        "productAccessInstructions": { "type": "string" },
+        "deploymentTime": { "type": "string" },
+        "supportedDevices": { "type": "array", "items": { "type": "string" } },
+        "fileSize": { "type": "string" },
+        "format": { "type": "array", "items": { "type": "string" } },
+        "downloadType": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "slug", "title", "description", "section", "thumbnailUrl"]
+    },
+    "Coupon": {
+      "title": "Coupon",
+      "description": "A discount coupon",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "discount": { "type": "number" },
+        "isActive": { "type": "boolean" },
+        "expiryDate": { "type": "string", "format": "date-time" }
+      },
+      "required": ["code", "discount"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "A customer order",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "customerEmail": { "type": "string" },
+        "productId": { "type": "string" },
+        "amount": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "completed", "cancelled"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "customerEmail", "productId", "amount", "status"]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "An administrator user",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" }
+      },
+      "required": ["uid", "email"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Collection of products"
+    },
+    "/coupons/{couponId}": {
+      "schema": "Coupon",
+      "description": "Collection of global coupons"
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Collection of individual orders"
+    },
+    "/admins/{adminId}": {
+      "schema": "Admin",
+      "description": "Whitelist of admin users"
+    }
+  }
+}

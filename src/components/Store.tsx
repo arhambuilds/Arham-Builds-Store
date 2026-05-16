@@ -2,8 +2,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ArrowRight, Flame, TrendingUp, Sparkles, AlertCircle, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState, useRef } from 'react';
-import { PRODUCTS, type Product } from '../data';
+import { type Product } from '../data';
 import { cn } from '../lib/utils';
+import { useProducts } from '../hooks/useProducts';
 
 interface ProductSectionProps {
   id: string;
@@ -26,12 +27,7 @@ export default function ProductSection({
 }: ProductSectionProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showScrollHint, setShowScrollHint] = useState(true);
-
-  const filteredProducts = section === 'Templates'
-    ? PRODUCTS.filter(p => p.section === 'Templates')
-    : section === 'All'
-      ? PRODUCTS
-      : PRODUCTS.filter(p => p.section === section);
+  const { products: filteredProducts, loading } = useProducts(section);
 
   const handleScroll = () => {
     if (scrollContainerRef.current && scrollContainerRef.current.scrollLeft > 20) {

@@ -20,7 +20,7 @@ export interface Product {
   videoUrl?: string;
   section: 'Templates' | 'Freebies' | 'Editing Assets';
   categories: string[];
-  badge?: 'Hot Sell' | 'Trending' | 'Latest';
+  badge?: 'Hot Sell' | 'Trending' | 'Latest' | string;
   checkoutUrl: string;
   features: { name: string; description: string }[];
   demoUrl?: string;
@@ -31,6 +31,12 @@ export interface Product {
   coupons?: { code: string; discount: number }[];
   productAccessUrl?: string;
   productAccessInstructions?: string;
+  deploymentTime?: string;
+  supportedDevices?: string[];
+  fileSize?: string;
+  format?: string[];
+  downloadType?: string;
+  updatedAt?: string;
 }
 
 export interface PricingPlan {

@@ -268,6 +268,7 @@ const DeliveryProcess: React.FC<DeliveryProcessProps> = ({
           textColor: [100, 100, 100], 
           fontSize: 8, 
           fontStyle: 'bold',
+          halign: 'right'
         },
         bodyStyles: { 
           fontSize: 9, 
@@ -278,13 +279,6 @@ const DeliveryProcess: React.FC<DeliveryProcessProps> = ({
           1: { halign: 'right' }, 
           2: { halign: 'center' }, 
           3: { halign: 'right' } 
-        },
-        headStyles: { 
-          fillColor: [243, 244, 246], 
-          textColor: [100, 100, 100], 
-          fontSize: 8, 
-          fontStyle: 'bold',
-          halign: 'right' // Default to right, will override for col 0
         },
         didParseCell: (data) => {
           if (data.section === 'head' && data.column.index === 0) {
