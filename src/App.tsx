@@ -82,17 +82,6 @@ function Home() {
 
 import ScrollToHash from './components/ScrollToHash';
 
-import CheckoutPage from './components/CheckoutPage';
-import { AdminLayout } from './components/admin/AdminLayout';
-import { AdminDashboard } from './components/admin/AdminDashboard';
-import { AdminProducts } from './components/admin/AdminProducts';
-import { AdminOrders } from './components/admin/AdminOrders';
-import { AdminLogin } from './components/admin/AdminLogin';
-
-import { AdminUsers } from './components/admin/AdminUsers';
-import { AdminUploads } from './components/admin/AdminUploads';
-import { AdminSettings } from './components/admin/AdminSettings';
-
 export default function App() {
   return (
     <Router>
@@ -115,17 +104,11 @@ export default function App() {
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/terms-conditions" element={<TermsConditionsPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
-          
-          {/* Admin Routes */}
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
-          <Route path="/admin/products" element={<AdminLayout><AdminProducts /></AdminLayout>} />
-          <Route path="/admin/orders" element={<AdminLayout><AdminOrders /></AdminLayout>} />
-          <Route path="/admin/users" element={<AdminLayout><AdminUsers /></AdminLayout>} />
-          <Route path="/admin/uploads" element={<AdminLayout><AdminUploads /></AdminLayout>} />
-          <Route path="/admin/settings" element={<AdminLayout><AdminSettings /></AdminLayout>} />
         </Routes>
       </div>
     </Router>
   );
 }
+
+import CheckoutPage from './components/CheckoutPage';
+

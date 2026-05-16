@@ -25,7 +25,6 @@ interface DeliveryProcessProps {
   customerName?: string;
   customerEmail?: string;
   customerPhone?: string;
-  countryCode?: string;
   coupon?: { code: string; discount: number };
 }
 
@@ -36,7 +35,6 @@ const DeliveryProcess: React.FC<DeliveryProcessProps> = ({
   customerName = "Valued Customer",
   customerEmail = "Not Provided",
   customerPhone = "Not Provided",
-  countryCode,
   coupon
 }) => {
   const navigate = useNavigate();
@@ -246,11 +244,7 @@ const DeliveryProcess: React.FC<DeliveryProcessProps> = ({
       doc.setFont("helvetica", "normal");
       doc.text(`Name: ${customerName}`, 15, 112);
       doc.text(`Email: ${customerEmail === "Not Provided" ? "AAFIARHAM2728@GMAIL.COM" : customerEmail}`, 15, 118);
-      let phoneText = `Phone: ${customerPhone}`;
-      if (countryCode && customerPhone !== "Not Provided") {
-        phoneText = `Phone: [${countryCode}] ${customerPhone}`;
-      }
-      if (customerPhone !== "Not Provided") doc.text(phoneText, 15, 124);
+      if (customerPhone !== "Not Provided") doc.text(`Phone: ${customerPhone}`, 15, 124);
       
       const now = new Date();
       doc.text(now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }), 110, 112);
@@ -269,6 +263,12 @@ const DeliveryProcess: React.FC<DeliveryProcessProps> = ({
         head: [['DESCRIPTION', 'UNIT PRICE', 'QTY', 'AMOUNT']],
         body: tableData,
         theme: 'striped',
+        headStyles: { 
+          fillColor: [243, 244, 246], 
+          textColor: [100, 100, 100], 
+          fontSize: 8, 
+          fontStyle: 'bold',
+        },
         bodyStyles: { 
           fontSize: 9, 
           textColor: [50, 50, 50] 
@@ -626,14 +626,7 @@ const DeliveryProcess: React.FC<DeliveryProcessProps> = ({
                   <h3 className="text-base md:text-lg font-black text-heading uppercase tracking-tight leading-tight">
                     {firstItem.title}
                   </h3>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-sm font-black text-heading opacity-70 leading-none">₹{firstItem.currentPrice}</span>
-                    {countryCode && (
-                      <span className="text-[8px] font-black bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-md uppercase tracking-wider">
-                        Region: {countryCode}
-                      </span>
-                    )}
-                  </div>
+                  <span className="text-sm font-black text-heading opacity-70 leading-none mt-0.5">₹{firstItem.currentPrice}</span>
                 </div>
               </div>
             )}
