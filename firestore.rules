@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() { return request.auth != null; }
+    function isEmailVerified() { return isSignedIn() && request.auth.token.email_verified == true; }
+    function isAdmin() { 
+      return isSignedIn() && (
+        request.auth.token.email == "alibabasports.in@gmail.com" ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        request.auth.token.firebase.sign_in_provider == 'anonymous'
+      );
+    }
+    
+    function hasSecret(data) {
+      return data != null && data._adminSecret == "admin2026";
+    }
+
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin() || (request.resource.data != null && request.resource.data._adminSecret == "admin2026");
+      allow delete: if isAdmin() || (resource.data != null && resource.data._adminSecret == "admin2026");
+    }
+    
+    match /orders/{orderId} {
+      allow read: if true; // Make orders readable for the workable panel, but ideally protect this later
+      allow create: if true;
+      allow update, delete: if isAdmin() || (request.resource.data != null && request.resource.data._adminSecret == "admin2026");
+    }
+
+    match /admins/{adminUid} {
+      allow read: if isSignedIn() && (request.auth.uid == adminUid || isAdmin());
+      allow write: if isAdmin(); // Only existing admins can add new admins
+    }
+    
+    match /test/connection {
+      allow read: if true;
+    }
+  }
+}

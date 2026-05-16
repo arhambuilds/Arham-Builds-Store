@@ -7,6 +7,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import { ProductCard } from './Store';
 import { cn } from '../lib/utils';
+import { fetchProductsFromFirestore } from '../services/productService';
 
 const StoreDecoration = () => {
   const storeHearts = [
@@ -67,16 +68,26 @@ export default function StoreGeneric({
   const [activeCategory, setActiveCategory] = useState('All Products');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [liveProducts, setLiveProducts] = useState<Product[]>([]);
   const filterRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     const timer = setTimeout(() => setIsVisible(true), 50);
+    
+    const load = async () => {
+      const data = await fetchProductsFromFirestore();
+      if (data.length > 0) {
+        setLiveProducts(data);
+      }
+    };
+    load();
+    
     return () => clearTimeout(timer);
   }, []);
 
   const baseProducts = useMemo(() => {
-    let list = PRODUCTS;
+    let list = liveProducts.length > 0 ? liveProducts : PRODUCTS;
     if (allowedSections) {
       list = list.filter(p => allowedSections.includes(p.section));
     }
@@ -84,7 +95,7 @@ export default function StoreGeneric({
       list = list.filter(p => !excludeSections.includes(p.section));
     }
     return list;
-  }, [allowedSections, excludeSections]);
+  }, [liveProducts, allowedSections, excludeSections]);
 
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {
@@ -157,7 +168,7 @@ export default function StoreGeneric({
             {subtitle}
           </motion.span>
           <h1 className="text-4xl md:text-7xl font-black text-heading mb-6 tracking-tighter leading-[0.9]">
-            {title.split(' ').map((word, i) => (
+            {(title || '').split(' ').map((word, i) => (
               <span key={i}>{word} {i === 0 && <br className="md:hidden" />}</span>
             ))}
           </h1>

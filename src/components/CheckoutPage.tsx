@@ -24,6 +24,8 @@ import {
 import DeliveryProcess from './DeliveryProcess';
 import { PRODUCTS, Product } from '../data';
 import { cn } from '../lib/utils';
+import { db } from '../lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 // --- Types ---
 
@@ -303,9 +305,33 @@ export default function CheckoutPage() {
       name: "Arham Builds",
       description: `Purchase: ${product?.title}`,
       image: LOGO_URL,
-      handler: function (response: any) {
+      handler: async function (response: any) {
         console.log("Payment Success:", response);
-        setRazorpayPaymentId(response.razorpay_payment_id);
+        const paymentId = response.razorpay_payment_id;
+        setRazorpayPaymentId(paymentId);
+
+        // Save to Firestore
+        try {
+          await addDoc(collection(db, 'orders'), {
+            razorpayPaymentId: paymentId,
+            customerName: formData.fullName,
+            customerEmail: formData.email,
+            customerPhone: selectedCountry.dialCode + formData.phone,
+            amount: pricing?.grandTotal || 0,
+            currency: 'INR',
+            items: [{
+              productId: product?.id,
+              title: product?.title,
+              price: product?.currentPrice
+            }],
+            status: 'completed',
+            createdAt: serverTimestamp(),
+            countryCode: selectedCountry.code
+          });
+        } catch (e) {
+          console.error("Error saving order to Firestore:", e);
+        }
+
         setIsProcessing(false);
         setIsSuccess(true);
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -375,6 +401,7 @@ export default function CheckoutPage() {
                 customerName={formData.fullName}
                 customerEmail={formData.email}
                 customerPhone={selectedCountry.dialCode + " " + formData.phone}
+                countryCode={selectedCountry.code}
                 orderId={razorpayPaymentId || undefined}
                 coupon={appliedCoupon ? { code: appliedCoupon.code, discount: appliedCoupon.discount } : undefined}
               />

@@ -9,6 +9,7 @@ import {
 import React, { useEffect, useState, useRef, type MouseEvent } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { PRODUCTS, type Product } from '../data';
+import { fetchProductById } from '../services/productService';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { cn } from '../lib/utils';
@@ -73,13 +74,29 @@ export default function TemplateDetailPage() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const foundProduct = PRODUCTS.find(p => p.id === id || p.slug === id);
-    if (foundProduct) {
-      setProduct(foundProduct);
-      setTimeout(() => setIsRevealed(true), 100);
-    } else {
+    const loadProduct = async () => {
+      // 1. Check static
+      const staticProduct = PRODUCTS.find(p => p.id === id || p.slug === id);
+      if (staticProduct) {
+        setProduct(staticProduct);
+        setTimeout(() => setIsRevealed(true), 100);
+        return;
+      }
+      
+      // 2. Check Firestore
+      if (id) {
+        const liveProduct = await fetchProductById(id);
+        if (liveProduct) {
+          setProduct(liveProduct);
+          setTimeout(() => setIsRevealed(true), 100);
+          return;
+        }
+      }
+      
       navigate('/store');
-    }
+    };
+    
+    loadProduct();
   }, [id, navigate]);
 
   useEffect(() => {

@@ -1,9 +1,10 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowRight, Flame, TrendingUp, Sparkles, AlertCircle, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { PRODUCTS, type Product } from '../data';
 import { cn } from '../lib/utils';
+import { fetchProductsFromFirestore } from '../services/productService';
 
 interface ProductSectionProps {
   id: string;
@@ -26,12 +27,27 @@ export default function ProductSection({
 }: ProductSectionProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showScrollHint, setShowScrollHint] = useState(true);
+  const [liveProducts, setLiveProducts] = useState<Product[]>([]);
+  const [isLoadingLive, setIsLoadingLive] = useState(true);
 
-  const filteredProducts = section === 'Templates'
+  useEffect(() => {
+    const load = async () => {
+      const data = await fetchProductsFromFirestore(section === 'All' ? undefined : section);
+      if (data.length > 0) {
+        setLiveProducts(data);
+      }
+      setIsLoadingLive(false);
+    };
+    load();
+  }, [section]);
+
+  const staticProducts = section === 'Templates'
     ? PRODUCTS.filter(p => p.section === 'Templates')
     : section === 'All'
       ? PRODUCTS
       : PRODUCTS.filter(p => p.section === section);
+
+  const filteredProducts = liveProducts.length > 0 ? liveProducts : staticProducts;
 
   const handleScroll = () => {
     if (scrollContainerRef.current && scrollContainerRef.current.scrollLeft > 20) {
