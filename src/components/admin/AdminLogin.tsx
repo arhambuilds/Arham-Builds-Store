@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { LayoutDashboard, ShieldAlert, KeyRound, User as UserIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../../lib/firebase';
-import { signInAnonymously } from 'firebase/auth';
 
 export const AdminLogin: React.FC = () => {
   const navigate = useNavigate();
@@ -101,35 +99,6 @@ export const AdminLogin: React.FC = () => {
               {isLoading ? 'Signing In...' : 'Sign In'}
             </button>
 
-            <div className="relative py-4">
-              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-100"></div></div>
-              <div className="relative flex justify-center text-[8px] font-black uppercase tracking-[0.3em] text-gray-300 bg-white px-4">OR SECURE LOGIN</div>
-            </div>
-
-            <button 
-              type="button"
-              onClick={async () => {
-                const { signInWithPopup, googleProvider } = await import('../../lib/firebase');
-                try {
-                  const result = await signInWithPopup(auth, googleProvider);
-                  if (result.user.email === "alibabasports.in@gmail.com") {
-                    localStorage.setItem('arham_admin_session', 'true');
-                    localStorage.setItem('arham_admin_username', 'arham2026');
-                    localStorage.setItem('arham_admin_password', 'admin2026');
-                    navigate('/admin');
-                  } else {
-                    setError('Access Denied: You are not authorized.');
-                  }
-                } catch (e) {
-                  console.error(e);
-                  setError('Google Sign-In failed.');
-                }
-              }}
-              className="w-full flex items-center justify-center gap-4 bg-white border-2 border-slate-100 text-slate-800 p-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-slate-50 transition-all active:scale-95 shadow-sm"
-            >
-              <img src="https://www.google.com/favicon.ico" alt="" className="w-4 h-4" />
-              Sign in with Google
-            </button>
             <button 
               type="button"
               onClick={() => navigate('/')}
