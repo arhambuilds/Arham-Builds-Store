@@ -12,15 +12,36 @@ import {
   TrendingUp
 } from 'lucide-react';
 
+import { 
+  ResponsiveContainer, 
+  AreaChart, 
+  Area, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip 
+} from 'recharts';
+
 interface Stats {
   revenue: number;
   orders: number;
   products: number;
+  users: number;
+  uploads: number;
   avgOrderValue: number;
+  chartData: any[];
 }
 
 export const AdminDashboard: React.FC = () => {
-  const [stats, setStats] = useState<Stats>({ revenue: 0, orders: 0, products: 0, avgOrderValue: 0 });
+  const [stats, setStats] = useState<Stats>({ 
+    revenue: 0, 
+    orders: 0, 
+    products: 0, 
+    users: 0,
+    uploads: 0,
+    avgOrderValue: 0,
+    chartData: []
+  });
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -42,7 +63,10 @@ export const AdminDashboard: React.FC = () => {
           revenue: data.revenue,
           orders: data.orders,
           products: data.products,
-          avgOrderValue: data.avgOrderValue
+          users: data.users || 0,
+          uploads: data.uploads || 0,
+          avgOrderValue: data.avgOrderValue,
+          chartData: data.chartData || []
         });
 
         setRecentOrders(data.recentOrders || []);
@@ -60,8 +84,8 @@ export const AdminDashboard: React.FC = () => {
   const cards = [
     { name: 'Total Revenue', value: `₹${stats.revenue.toLocaleString()}`, icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-50' },
     { name: 'Total Orders', value: stats.orders, icon: ShoppingCart, color: 'text-blue-500', bg: 'bg-blue-50' },
-    { name: 'Avg. Order', value: `₹${stats.avgOrderValue.toFixed(2)}`, icon: TrendingUp, color: 'text-indigo-500', bg: 'bg-indigo-50' },
-    { name: 'Total Products', value: stats.products, icon: Users, color: 'text-pink-500', bg: 'bg-pink-50' },
+    { name: 'Total Users', value: stats.users, icon: Users, color: 'text-pink-500', bg: 'bg-pink-50' },
+    { name: 'Uploaded Files', value: stats.uploads, icon: TrendingUp, color: 'text-indigo-500', bg: 'bg-indigo-50' },
   ];
 
   if (loading) return <div className="animate-pulse space-y-8">
@@ -95,6 +119,57 @@ export const AdminDashboard: React.FC = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Chart Section */}
+      <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-xl font-black flex items-center gap-3 text-slate-800">
+            <TrendingUp size={18} className="text-primary" />
+            REVENUE GROWTH
+          </h2>
+          <select className="bg-slate-50 border-none rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-widest outline-none">
+            <option>Last 6 Months</option>
+            <option>Last Year</option>
+          </select>
+        </div>
+        <div className="h-[300px] w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={stats.chartData}>
+              <defs>
+                <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.1}/>
+                  <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+              <XAxis 
+                dataKey="name" 
+                axisLine={false} 
+                tickLine={false} 
+                tick={{fontSize: 10, fontWeight: 'bold', fill: '#94a3b8'}} 
+                dy={10}
+              />
+              <YAxis 
+                axisLine={false} 
+                tickLine={false} 
+                tick={{fontSize: 10, fontWeight: 'bold', fill: '#94a3b8'}}
+                tickFormatter={(value) => `₹${value}`}
+              />
+              <Tooltip 
+                contentStyle={{borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontWeight: 'bold', fontSize: '10px'}}
+              />
+              <Area 
+                type="monotone" 
+                dataKey="revenue" 
+                stroke="#10b981" 
+                strokeWidth={3}
+                fillOpacity={1} 
+                fill="url(#colorRevenue)" 
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
       {/* Recent Orders Table */}

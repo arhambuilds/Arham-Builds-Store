@@ -89,6 +89,10 @@ import { AdminProducts } from './components/admin/AdminProducts';
 import { AdminOrders } from './components/admin/AdminOrders';
 import { AdminLogin } from './components/admin/AdminLogin';
 
+import { AdminUsers } from './components/admin/AdminUsers';
+import { AdminUploads } from './components/admin/AdminUploads';
+import { AdminSettings } from './components/admin/AdminSettings';
+
 export default function App() {
   return (
     <Router>
@@ -117,7 +121,9 @@ export default function App() {
           <Route path="/admin" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
           <Route path="/admin/products" element={<AdminLayout><AdminProducts /></AdminLayout>} />
           <Route path="/admin/orders" element={<AdminLayout><AdminOrders /></AdminLayout>} />
-          <Route path="/admin/settings" element={<AdminLayout><div className="p-8"><h1 className="text-2xl font-black">SETTINGS</h1><p className="text-gray-400">Settings management coming soon...</p></div></AdminLayout>} />
+          <Route path="/admin/users" element={<AdminLayout><AdminUsers /></AdminLayout>} />
+          <Route path="/admin/uploads" element={<AdminLayout><AdminUploads /></AdminLayout>} />
+          <Route path="/admin/settings" element={<AdminLayout><AdminSettings /></AdminLayout>} />
         </Routes>
       </div>
     </Router>

@@ -8,7 +8,10 @@ import {
   LogOut,
   ChevronRight,
   TrendingUp,
-  Users
+  Users,
+  Upload,
+  Moon,
+  Sun
 } from 'lucide-react';
 import { auth, signOut } from '../../lib/firebase';
 import { useAuth } from '../../hooks/useAuth';
@@ -22,6 +25,18 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const { user, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [isDark, setIsDark] = React.useState(false);
+
+  React.useEffect(() => {
+    const saved = localStorage.getItem('admin_dark_mode') === 'true';
+    setIsDark(saved);
+  }, []);
+
+  const toggleDark = () => {
+    const newVal = !isDark;
+    setIsDark(newVal);
+    localStorage.setItem('admin_dark_mode', String(newVal));
+  };
 
   const handleSignOut = async () => {
     localStorage.removeItem('arham_admin_session');
@@ -60,21 +75,40 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     { name: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
     { name: 'Products', icon: Package, path: '/admin/products' },
     { name: 'Orders', icon: ShoppingCart, path: '/admin/orders' },
+    { name: 'Users', icon: Users, path: '/admin/users' },
+    { name: 'Uploads', icon: Upload, path: '/admin/uploads' },
     { name: 'Settings', icon: Settings, path: '/admin/settings' },
   ];
 
   return (
-    <div className="min-h-screen bg-[#f4f5f8] flex flex-col md:flex-row">
+    <div className={cn(
+      "min-h-screen flex flex-col md:flex-row transition-colors",
+      isDark ? "bg-[#0f172a] text-slate-100" : "bg-[#f4f5f8] text-slate-800"
+    )}>
       {/* Sidebar */}
-      <aside className="w-full md:w-64 bg-white border-r border-gray-100 flex flex-col shrink-0">
-        <div className="p-8 border-b border-gray-100 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white font-black text-xl">
-            A
+      <aside className={cn(
+        "w-full md:w-64 flex flex-col shrink-0 border-r transition-all",
+        isDark ? "bg-[#1e293b] border-slate-800" : "bg-white border-gray-100"
+      )}>
+        <div className={cn(
+          "p-8 border-b flex items-center justify-between",
+          isDark ? "border-slate-800" : "border-gray-100"
+        )}>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white font-black text-xl">
+              A
+            </div>
+            <div className="flex flex-col">
+              <span className="font-black text-sm uppercase tracking-tighter">Arham Builds</span>
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest -mt-1">Admin Panel</span>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <span className="font-black text-sm uppercase tracking-tighter">Arham Builds</span>
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest -mt-1">Admin Panel</span>
-          </div>
+          <button 
+            onClick={toggleDark}
+            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-all"
+          >
+            {isDark ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} className="text-slate-400" />}
+          </button>
         </div>
 
         <nav className="flex-1 p-4 space-y-2">
@@ -88,7 +122,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                   "flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-black uppercase tracking-widest text-[10px]",
                   isActive 
                     ? "bg-primary/10 text-primary" 
-                    : "text-gray-400 hover:bg-gray-50 hover:text-gray-600"
+                    : isDark ? "text-slate-400 hover:bg-slate-800 hover:text-slate-200" : "text-gray-400 hover:bg-gray-50 hover:text-gray-600"
                 )}
               >
                 <item.icon size={16} />
@@ -99,7 +133,10 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           })}
         </nav>
 
-        <div className="p-4 border-t border-gray-100">
+        <div className={cn(
+          "p-4 border-t",
+          isDark ? "border-slate-800" : "border-gray-100"
+        )}>
           <button 
             onClick={handleSignOut}
             className="flex items-center gap-3 px-4 py-3 rounded-2xl w-full text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all font-black uppercase tracking-widest text-[10px]"
