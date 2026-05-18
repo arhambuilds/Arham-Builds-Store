@@ -20,7 +20,7 @@ export interface Product {
   videoUrl?: string;
   section: 'Templates' | 'Freebies' | 'Editing Assets';
   categories: string[];
-  badge?: 'Hot Sell' | 'Trending' | 'Latest' | string;
+  badge?: 'Hot Sell' | 'Trending' | 'Latest';
   checkoutUrl: string;
   features: { name: string; description: string }[];
   demoUrl?: string;
@@ -31,12 +31,7 @@ export interface Product {
   coupons?: { code: string; discount: number }[];
   productAccessUrl?: string;
   productAccessInstructions?: string;
-  deploymentTime?: string;
-  supportedDevices?: string[];
-  fileSize?: string;
-  format?: string[];
-  downloadType?: string;
-  updatedAt?: string;
+  redirectUrl?: string; // URL to redirect after payment
 }
 
 export interface PricingPlan {
@@ -209,7 +204,8 @@ export const PRODUCTS: Product[] = [
       { code: 'HBDLOVE', discount: 15 }
     ],
     productAccessUrl: 'https://anujbuilds.in/',
-    productAccessInstructions: 'Open the link and submit the Cusomization form to start 24 hrs delivry timeer.'
+    productAccessInstructions: 'Open the link and submit the Cusomization form to start 24 hrs delivry timeer.',
+    redirectUrl: 'https://happy-birthday-sahiba-v2.arhambuilds.in/form'
   },
   {
     id: 'p2',
@@ -240,7 +236,8 @@ export const PRODUCTS: Product[] = [
       { code: 'V1OFF', discount: 12 }
     ],
     productAccessUrl: 'https://anujbuilds.in/',
-    productAccessInstructions: 'Open the link and submit the Cusomization form to start 24 hrs delivry timeer.'
+    productAccessInstructions: 'Open the link and submit the Cusomization form to start 24 hrs delivry timeer.',
+    redirectUrl: 'https://anujbuilds.in/form'
   },
   {
     id: 'p3',
@@ -297,7 +294,8 @@ export const PRODUCTS: Product[] = [
       { code: 'CELEBRATE', discount: 10 }
     ],
     productAccessUrl: 'https://anujbuilds.in/',
-    productAccessInstructions: 'Open the link and submit the Cusomization form to start 24 hrs delivry timeer.'
+    productAccessInstructions: 'Open the link and submit the Cusomization form to start 24 hrs delivry timeer.',
+    redirectUrl: 'https://anujbuilds.in/new-year-form'
   },
   {
     id: 'f1',

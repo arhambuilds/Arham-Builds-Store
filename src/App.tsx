@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Testimonials from './components/Testimonials';
@@ -24,18 +24,8 @@ import TermsConditionsPage from './components/TermsConditionsPage';
 import FreebiesPage from './components/FreebiesPage';
 import FAQ from './components/FAQ';
 import About from './components/About';
-import ScrollToHash from './components/ScrollToHash';
-import CheckoutPage from './components/CheckoutPage';
 
-// Admin Components
-import AdminLayout from './components/admin/AdminLayout';
-import Dashboard from './components/admin/Dashboard';
-import ProductList from './components/admin/ProductList';
-import ProductForm from './components/admin/ProductForm';
-import Orders from './components/admin/Orders';
-import Coupons from './components/admin/Coupons';
-import Settings from './components/admin/Settings';
-import LoginPage from './components/admin/LoginPage';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const navigate = useNavigate();
@@ -90,6 +80,8 @@ function Home() {
   );
 }
 
+import ScrollToHash from './components/ScrollToHash';
+
 export default function App() {
   return (
     <Router>
@@ -112,21 +104,11 @@ export default function App() {
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/terms-conditions" element={<TermsConditionsPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
-          
-          {/* Admin Routes */}
-          <Route path="/admin/login" element={<LoginPage />} />
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="products" element={<ProductList />} />
-            <Route path="products/new" element={<ProductForm />} />
-            <Route path="products/edit/:id" element={<ProductForm />} />
-            <Route path="orders" element={<Orders />} />
-            <Route path="coupons" element={<Coupons />} />
-            <Route path="settings" element={<Settings />} />
-          </Route>
         </Routes>
       </div>
     </Router>
   );
 }
+
+import CheckoutPage from './components/CheckoutPage';
 

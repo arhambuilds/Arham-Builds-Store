@@ -22,9 +22,8 @@ import {
   Gavel
 } from 'lucide-react';
 import DeliveryProcess from './DeliveryProcess';
-import { type Product } from '../data';
+import { PRODUCTS, Product } from '../data';
 import { cn } from '../lib/utils';
-import { useProduct } from '../hooks/useProduct';
 
 // --- Types ---
 
@@ -131,7 +130,8 @@ export default function CheckoutPage() {
   const navigate = useNavigate();
   const productId = searchParams.get('id');
   
-  const { product, loading } = useProduct(productId || '');
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
@@ -163,10 +163,15 @@ export default function CheckoutPage() {
   const LOGO_URL = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgV4_PzmTUKmZfLipz0IZOO5cMvwqNvfX1zIQrv19tqdMzCd3qNRmbcqgLzeY-nfdCl-Y_3KbaToX3lLgamK1wbKH9We_0RdavOm4Ci24K6cVz0RorQK95k8aGSdh2lRMz0pyCdoVzKYFgN0cQQwerenIipHrNAYHDa2h61HIejBn07XpGX3SxOHnj9JA/s320/Arham-Adib-Logo.jpg";
 
   useEffect(() => {
-    if (!loading && !product && productId) {
-      navigate('/');
+    // Find product from data
+    if (productId) {
+      const foundProduct = PRODUCTS.find(p => p.id === productId);
+      if (foundProduct) {
+        setProduct(foundProduct);
+      }
     }
-  }, [loading, product, productId, navigate]);
+    setLoading(false);
+  }, [productId]);
 
   // Determine Checkout Version
   const isEditingAssets = product?.section === 'Editing Assets';
@@ -202,9 +207,12 @@ export default function CheckoutPage() {
     const trimmedName = formData.fullName.trim();
     if (trimmedName.length < 3) return false;
 
+    // Strict email regex: requires at least 3 characters after the final dot (e.g., .com, .org)
+    // This will prevent .co or .in from being marked as valid if the user wants at least 3 chars.
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{3,}$/;
     if (!emailRegex.test(formData.email)) return false;
 
+    // Check for full digit phone number based on selected country
     if (formData.phone.length !== selectedCountry.phoneLength) return false;
 
     return true;
@@ -279,6 +287,7 @@ export default function CheckoutPage() {
     const razorpayKey = (import.meta as any).env.VITE_RAZORPAY_KEY_ID;
     
     if (!razorpayKey || razorpayKey.includes('YOUR_KEY_HERE')) {
+      // Fallback for demo if key isn't provided yet
       console.log("Demo Mode: No Razorpay Key found in environment variables.");
       await new Promise(resolve => setTimeout(resolve, 2000));
       setIsProcessing(false);
@@ -289,7 +298,7 @@ export default function CheckoutPage() {
 
     const options = {
       key: razorpayKey,
-      amount: (pricing?.grandTotal || 0) * 100,
+      amount: (pricing?.grandTotal || 0) * 100, // Amount in paise
       currency: "INR",
       name: "Arham Builds",
       description: `Purchase: ${product?.title}`,
@@ -311,7 +320,7 @@ export default function CheckoutPage() {
         section: product?.section,
       },
       theme: {
-        color: "#ff014f",
+        color: "#ff014f", // Primary brand color (#ff014f)
       },
       modal: {
         ondismiss: function() {
@@ -507,6 +516,7 @@ export default function CheckoutPage() {
                           </div>
  
                           <div className="space-y-3">
+                            {/* Full Name */}
                             <div className="space-y-1">
                               <div className="flex justify-between items-center px-1">
                                 <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Full Name</label>
@@ -520,6 +530,7 @@ export default function CheckoutPage() {
                               />
                             </div>
  
+                            {/* Email */}
                             <div className="space-y-1">
                               <div className="flex justify-between items-center px-1">
                                 <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Email Address</label>
@@ -536,6 +547,7 @@ export default function CheckoutPage() {
                               />
                             </div>
  
+                            {/* Phone Number */}
                             <div className="space-y-1">
                               <div className="flex justify-between items-center px-1">
                                 <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Phone Number</label>
@@ -648,6 +660,7 @@ export default function CheckoutPage() {
                           </div>
                         </motion.div>
                         
+                        {/* Mobile Pay Button - Only visible on mobile after details */}
                         <div className="lg:hidden animate-slide-up delay-200">
                           <button
                             onClick={handlePayment}
@@ -693,6 +706,7 @@ export default function CheckoutPage() {
                         className="lg:col-span-5 space-y-3 order-1 lg:order-2 w-full mt-6 lg:mt-0"
                       >
                         <div className="p-4 md:p-5 rounded-[1.5rem] transition-all duration-500 overflow-hidden relative bg-white card-shadow">
+                          {/* Product Info */}
                           <div className="flex gap-4 mb-3">
                             <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 shadow-2xl shadow-black/10 border border-white/10">
                               <img 
@@ -714,6 +728,7 @@ export default function CheckoutPage() {
 
                           <div className="h-[1px] my-3 transition-colors bg-gray-100"></div>
 
+                          {/* Coupon Section */}
                           <div className="space-y-2 mb-3">
                             {product?.coupons && product.coupons.length > 0 && (
                               <div>
@@ -781,6 +796,7 @@ export default function CheckoutPage() {
                             </div>
                           </div>
 
+                          {/* Pricing Details */}
                           <div className="space-y-3">
                             <div className="p-4 rounded-[1.5rem] space-y-2 bg-[#f8f9fb]">
                               <div className="flex justify-between items-center text-[11px] font-bold tracking-tight text-gray-500">
@@ -817,6 +833,7 @@ export default function CheckoutPage() {
                             </div>
                           </div>
 
+                          {/* Mobile Continue Button */}
                           <button
                             onClick={() => {
                               setMobileStep('details');
@@ -831,6 +848,7 @@ export default function CheckoutPage() {
                             <ArrowRight size={16} strokeWidth={3} className="opacity-40" />
                           </button>
 
+                          {/* Combined Button */}
                           <button
                             onClick={handlePayment}
                             disabled={!isFormValid || isProcessing}
@@ -853,6 +871,7 @@ export default function CheckoutPage() {
                           </button>
                         </div>
                         
+                        {/* Badges */}
                         <div className="hidden lg:flex items-center justify-center gap-6 py-2 opacity-20 grayscale transition-all hover:opacity-50 hover:grayscale-0">
                           {['Visa', 'Mastercard', 'UPI', 'Stripe'].map(method => (
                             <span key={method} className="text-[8px] font-black uppercase tracking-[0.3em] text-gray-400">{method}</span>
@@ -878,6 +897,7 @@ export default function CheckoutPage() {
             className="relative w-full max-w-lg rounded-[2.5rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] border overflow-hidden flex flex-col max-h-[90dvh] bg-white border-gray-100"
           >
              
+             {/* Modal Header */}
              <div className="p-6 border-b flex justify-between items-center flex-shrink-0 bg-gray-50/50 border-gray-100">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500 shadow-sm transition-all group-hover:scale-105">
@@ -897,7 +917,10 @@ export default function CheckoutPage() {
                 </button>
              </div>
              
+             {/* Modal Content - Scrollable */}
              <div className="flex-1 overflow-y-auto p-6 space-y-6 touch-auto no-scrollbar pb-12">
+                
+                {/* How It Works Section */}
                 <section className="space-y-2">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500">
@@ -913,6 +936,7 @@ export default function CheckoutPage() {
                   </p>
                 </section>
  
+                {/* Privacy & Data Section */}
                 <section className="space-y-2">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
@@ -927,9 +951,18 @@ export default function CheckoutPage() {
                         : "Your privacy matters to us. We use your photos and text only for the purpose of creating your requested website. Once the validity period ends and the site is taken down, all personal assets associated with that project are securely deleted from our active deployment servers. We only collect basic information such as your name, email address, and phone number for payment verification, delivery access, customer support, and order management purposes. We do not store your UPI PIN, bank details, card information, or sensitive payment credentials. All payments are securely processed and protected through Razorpay’s encrypted payment system. Your personal information is never sold or shared with third parties."
                       }
                     </p>
+                    {isEditingAssets && (
+                      <div className="mt-1 p-3 rounded-xl bg-blue-50 border border-blue-100 flex gap-3">
+                        <Lock className="text-blue-500 shrink-0" size={14} />
+                        <p className="text-[10px] font-black uppercase tracking-tight text-blue-600 leading-tight">
+                          SAFE PURCHASE: ALL PAYMENTS ARE VERIFIED AND PROTECTED THROUGH RAZORPAY TO ENSURE A SECURE CHECKOUT EXPERIENCE.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </section>
 
+                {/* Instant Delivery Process Section */}
                 <section className="space-y-2">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500">
@@ -969,7 +1002,59 @@ export default function CheckoutPage() {
                     </div>
                   </div>
                 </section>
+
+                {/* Download & Access (Editing Assets Only) */}
+                {isEditingAssets && (
+                  <section className="space-y-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-500">
+                        <Download size={16} strokeWidth={2.5} />
+                      </div>
+                      <h4 className="text-[12px] font-black uppercase tracking-[0.2em] text-black">DOWNLOAD & ACCESS</h4>
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-[12px] leading-normal tracking-wide px-1 text-gray-500">
+                        All products are delivered digitally through secure Google Drive links provided inside a PDF document. Files are generally delivered in ZIP or RAR format. Please extract the archive using WinRAR or 7-Zip to access the files properly.
+                      </p>
+                      <ul className="space-y-1 text-[11px] font-bold text-gray-500 px-1 list-disc list-inside opacity-70">
+                        <li>Links may be hidden inside a secure PDF file</li>
+                        <li>Payment confirmation is provided separately</li>
+                        <li>Save both PDFs for future access and verification</li>
+                      </ul>
+                    </div>
+                  </section>
+                )}
+
+                {/* Usage & Resale Policies (Editing Assets Only) */}
+                {isEditingAssets && (
+                  <>
+                    <section className="space-y-2">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500">
+                          <FileText size={16} strokeWidth={2.5} />
+                        </div>
+                        <h4 className="text-[12px] font-black uppercase tracking-[0.2em] text-black">USAGE & ATTRIBUTION</h4>
+                      </div>
+                      <p className="text-[12px] leading-normal tracking-wide px-1 text-gray-500">
+                        These assets are collected, created, customized, or curated for creative and professional use. You may use them in personal or client projects. Redistribution rights are NOT included.
+                      </p>
+                    </section>
+
+                    <section className="space-y-2">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-xl bg-red-500/10 flex items-center justify-center text-red-500">
+                          <Gavel size={16} strokeWidth={2.5} />
+                        </div>
+                        <h4 className="text-[12px] font-black uppercase tracking-[0.2em] text-black">RESALE POLICY</h4>
+                      </div>
+                      <p className="text-[12px] leading-normal tracking-wide px-1 text-gray-500">
+                        Reselling, redistributing, leaking, or sharing purchased files is strictly prohibited. unauthorized activity will result in strict legal action immediately without prior notice.
+                      </p>
+                    </section>
+                  </>
+                )}
  
+                {/* Refund & Cancellation Section */}
                 <section className="space-y-2">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-xl bg-red-500/10 flex items-center justify-center text-red-500">
@@ -984,9 +1069,27 @@ export default function CheckoutPage() {
                         : "As these are digital products, all sales are final. No refunds will be issued once the process has started."
                       }
                     </p>
+                    {!isEditingAssets && (
+                      <ul className="space-y-2 text-[12px] tracking-wide text-gray-600">
+                        <li className="flex items-start gap-3">
+                          <div className="w-1.5 h-1.5 rounded-full bg-gray-400 mt-2.5 shrink-0" />
+                          <span>Orders cannot be cancelled once the payment is confirmed.</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                          <div className="w-1.5 h-1.5 rounded-full bg-gray-400 mt-2.5 shrink-0" />
+                          <span>We offer a 100% money-back guarantee only if we fail to deliver within 24 hours after form submission.</span>
+                        </li>
+                      </ul>
+                    )}
+                    {isEditingAssets && (
+                      <p className="text-[11px] font-bold text-red-500 leading-tight">
+                        * IF YOU FACE TECHNICAL ISSUES (CORRUPTED FILES/INVALID LINKS), SUPPORT WILL BE PROVIDED TO RESOLVE IT.
+                      </p>
+                    )}
                   </div>
                 </section>
  
+                {/* Validity Section */}
                 <section className="space-y-2">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500">
@@ -1014,6 +1117,7 @@ export default function CheckoutPage() {
                 </div>
              </div>
  
+             {/* Modal Footer */}
              <div className="p-8 border-t flex-shrink-0 bg-white border-gray-100">
                 <button 
                   onClick={() => { setShowFullTerms(false); setIsTermsAccepted(true); }} 

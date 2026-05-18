@@ -43,6 +43,8 @@ const DeliveryProcess: React.FC<DeliveryProcessProps> = ({
   const [isVisible, setIsVisible] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [isOrderSummaryOpen, setIsOrderSummaryOpen] = useState(false);
+  const [secondsRemaining, setSecondsRemaining] = useState(5);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
   const LOGO_URL = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgV4_PzmTUKmZfLipz0IZOO5cMvwqNvfX1zIQrv19tqdMzCd3qNRmbcqgLzeY-nfdCl-Y_3KbaToX3lLgamK1wbKH9We_0RdavOm4Ci24K6cVz0RorQK95k8aGSdh2lRMz0pyCdoVzKYFgN0cQQwerenIipHrNAYHDa2h61HIejBn07XpGX3SxOHnj9JA/s320/Arham-Adib-Logo.jpg";
 
   const subtotal = items.reduce((sum, item) => sum + (item.currentPrice * (item.quantity || 1)), 0);
@@ -59,6 +61,7 @@ const DeliveryProcess: React.FC<DeliveryProcessProps> = ({
     // Auto-download unified PDF after a short delay
     const autoDownloadTimer = setTimeout(() => {
       handleDownloadFullOrder();
+      setShouldRedirect(true);
     }, 2000);
 
     return () => {
@@ -67,6 +70,24 @@ const DeliveryProcess: React.FC<DeliveryProcessProps> = ({
       clearTimeout(autoDownloadTimer);
     };
   }, []);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (shouldRedirect && secondsRemaining > 0) {
+      interval = setInterval(() => {
+        setSecondsRemaining(prev => prev - 1);
+      }, 1000);
+    } else if (shouldRedirect && secondsRemaining === 0) {
+      if (firstItem?.redirectUrl) {
+        const url = new URL(firstItem.redirectUrl);
+        url.searchParams.append('email', customerEmail);
+        url.searchParams.append('orderId', orderId);
+        url.searchParams.append('name', customerName);
+        window.location.href = url.toString();
+      }
+    }
+    return () => clearInterval(interval);
+  }, [shouldRedirect, secondsRemaining, firstItem, customerEmail, orderId, customerName]);
 
   const handleDownloadFullOrder = async () => {
     if (isGeneratingPDF || !firstItem) return;
@@ -268,7 +289,7 @@ const DeliveryProcess: React.FC<DeliveryProcessProps> = ({
           textColor: [100, 100, 100], 
           fontSize: 8, 
           fontStyle: 'bold',
-          halign: 'right'
+          halign: 'right' // Default to right, will override for col 0
         },
         bodyStyles: { 
           fontSize: 9, 
@@ -583,6 +604,16 @@ const DeliveryProcess: React.FC<DeliveryProcessProps> = ({
               </div>
 
               <div className="flex flex-col gap-3 w-full max-w-[320px] mt-2 md:mt-0">
+                {shouldRedirect && firstItem?.redirectUrl && (
+                  <div className="mb-4 p-4 bg-primary/5 border border-primary/20 rounded-2xl animate-pulse">
+                    <p className="text-[10px] font-black text-primary uppercase tracking-widest text-center">
+                      Redirecting to customization form in {secondsRemaining} seconds...
+                    </p>
+                    <p className="text-[8px] font-bold text-gray-500 uppercase tracking-tight text-center mt-1">
+                      Please don't close this window. Your receipt is downloading.
+                    </p>
+                  </div>
+                )}
                 <button 
                   onClick={handleDownloadFullOrder}
                   disabled={isGeneratingPDF}

@@ -1,16 +1,14 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Search, SlidersHorizontal, ArrowLeft, X, RefreshCcw, Sparkles, Heart } from 'lucide-react';
+import { Search, SlidersHorizontal, ArrowLeft, X, Check, RefreshCcw, Sparkles, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { type Product } from '../data';
+import { PRODUCTS, Product } from '../data';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { ProductCard } from './Store';
 import { cn } from '../lib/utils';
-import { useProducts } from '../hooks/useProducts';
 
 const StoreDecoration = () => {
-// ... existing decorations
   const storeHearts = [
     { size: 44, top: '12%', left: '10%', color: 'text-primary/20', delay: '0s' },
     { size: 32, top: '55%', left: '8%', color: 'text-primary/10', delay: '1s' },
@@ -71,8 +69,6 @@ export default function StoreGeneric({
   const [isVisible, setIsVisible] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
 
-  const { products: allProducts, loading } = useProducts();
-
   useEffect(() => {
     window.scrollTo(0, 0);
     const timer = setTimeout(() => setIsVisible(true), 50);
@@ -80,7 +76,7 @@ export default function StoreGeneric({
   }, []);
 
   const baseProducts = useMemo(() => {
-    let list = allProducts;
+    let list = PRODUCTS;
     if (allowedSections) {
       list = list.filter(p => allowedSections.includes(p.section));
     }
@@ -88,7 +84,7 @@ export default function StoreGeneric({
       list = list.filter(p => !excludeSections.includes(p.section));
     }
     return list;
-  }, [allProducts, allowedSections, excludeSections]);
+  }, [allowedSections, excludeSections]);
 
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {

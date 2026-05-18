@@ -4,128 +4,146 @@ import {
   Heart, Info, Lock, History, AlertCircle, ArrowRight, ExternalLink, 
   CreditCard, Flame, TrendingUp, Sparkles, Clock, Zap, Package, Calendar, 
   RefreshCcw, ChevronRight, MousePointer2, FileText, Send, Rocket, Pause, 
-  Volume2, VolumeX, LayoutGrid, Gamepad2, Video, Smile, Download
+  Volume2, VolumeX 
 } from 'lucide-react';
 import React, { useEffect, useState, useRef, type MouseEvent } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { type Product } from '../data';
+import { PRODUCTS, type Product } from '../data';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { cn } from '../lib/utils';
 import { ProductCard } from './Store';
-import { useProduct } from '../hooks/useProduct';
-import { useProducts } from '../hooks/useProducts';
+
 interface InteractiveProps {
-  feature: {
-    name: string;
-    description: string;
-    icon?: string;
-  };
+  feature: { name: string; description: string };
+  key?: React.Key;
 }
 
-const InteractiveFeature: React.FC<InteractiveProps> = ({ feature }) => {
-  const Icon = feature.icon && IconMap[feature.icon] ? IconMap[feature.icon] : Sparkles;
-  
-  return (
-    <motion.div 
-      whileHover={{ y: -5, scale: 1.02 }}
-      className="p-4 rounded-2xl bg-white border border-primary/5 hover:border-primary/20 transition-all flex items-start gap-4"
-    >
-      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-        <Icon className="text-primary" size={20} />
-      </div>
-      <div>
-        <h4 className="font-bold text-heading text-sm">{feature.name}</h4>
-        <p className="text-[10px] text-body/60 leading-relaxed mt-1">{feature.description}</p>
-      </div>
-    </motion.div>
-  );
-};
+const InteractiveFeature = ({ feature }: InteractiveProps) => {
+  const [isVisible, setIsVisible] = useState(false);
 
-const IconMap: { [key: string]: React.ElementType } = {
-  Sparkles, Zap, ShieldCheck, Clock, Layers: LayoutGrid, Gamepad: Gamepad2, Video, Smile, Download
+  return (
+    <div 
+      className="relative group py-2 flex items-center gap-3 cursor-help"
+      onMouseEnter={() => setIsVisible(true)}
+      onMouseLeave={() => setIsVisible(false)}
+      onClick={() => setIsVisible(!isVisible)}
+    >
+      <div className="flex-shrink-0 bg-primary/10 p-1 rounded-md transition-transform group-hover:scale-110">
+        <CheckCircle2 size={14} className="text-primary" />
+      </div>
+      <h4 className="font-bold text-heading text-xs border-b border-transparent group-hover:border-primary/30 transition-all uppercase tracking-tight">
+        {feature.name}
+      </h4>
+
+      <AnimatePresence>
+        {isVisible && (
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 5 }}
+            className="absolute bottom-full left-0 mb-3 w-64 z-50 pointer-events-none"
+          >
+            <div className="bg-white p-4 rounded-2xl shadow-2xl border border-primary/5 relative">
+              <span className="block text-[9px] font-black uppercase tracking-widest text-primary mb-1">
+                {feature.name}
+              </span>
+              <p className="text-[11px] text-body/70 leading-relaxed font-semibold">
+                {feature.description}
+              </p>
+              <div className="absolute top-full left-6 -translate-y-1/2 rotate-45 w-2 h-2 bg-white border-r border-b border-primary/5"></div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
 };
 
 export default function TemplateDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { product, loading } = useProduct(id || '');
-  const { products: allProducts } = useProducts('Templates');
+  const [product, setProduct] = useState<Product | null>(null);
   const [isRevealed, setIsRevealed] = useState(false);
-  
-  // Video States
-  const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isPaused, setIsPaused] = useState(true);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
   const [progress, setProgress] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
-  const toggleVideoPlay = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const foundProduct = PRODUCTS.find(p => p.id === id || p.slug === id);
+    if (foundProduct) {
+      setProduct(foundProduct);
+      setTimeout(() => setIsRevealed(true), 100);
+    } else {
+      navigate('/store');
+    }
+  }, [id, navigate]);
+
+  useEffect(() => {
+    if (isPlaying && !isPaused && videoRef.current) {
+      const interval = setInterval(() => {
+        if (videoRef.current) {
+          const duration = videoRef.current.duration;
+          if (duration && !isNaN(duration)) {
+            const p = (videoRef.current.currentTime / duration) * 100;
+            setProgress(p);
+          }
+        }
+      }, 500);
+      return () => clearInterval(interval);
+    }
+  }, [isPlaying, isPaused]);
+
+  if (!product) return null;
+
+  const isOutOfStock = product.stockCount === 0;
+  const isLowStock = product.stockCount !== undefined && product.stockCount > 0 && product.stockCount <= 5;
+  const discountPercentage = product.originalPrice 
+    ? Math.round(((product.originalPrice - product.currentPrice) / product.originalPrice) * 100) 
+    : 0;
+
+  const getBadgeIcon = () => {
+    switch (product.badge) {
+      case 'Hot Sell': return <Flame size={14} className="fill-current" />;
+      case 'Trending': return <TrendingUp size={14} />;
+      case 'Latest': return <Sparkles size={14} />;
+      default: return null;
+    }
+  };
+
+  const getBadgeStyles = () => {
+    switch (product.badge) {
+      case 'Hot Sell': return 'bg-orange-500 text-white';
+      case 'Trending': return 'bg-primary text-white';
+      case 'Latest': return 'bg-purple-600 text-white';
+      default: return 'bg-heading text-white';
+    }
+  };
+
+  const toggleVideoPlay = (e?: MouseEvent) => {
+    if (e) e.stopPropagation();
     if (videoRef.current) {
-      if (isPlaying) {
+      if (videoRef.current.paused) {
+        videoRef.current.play().catch(error => {
+          console.error("Video play interrupted:", error);
+        });
+      } else {
         videoRef.current.pause();
         setIsPlaying(false);
-        setIsPaused(true);
-      } else {
-        videoRef.current.play();
-        setIsPlaying(true);
-        setIsPaused(false);
       }
     }
   };
 
-  const toggleMute = (e: React.MouseEvent) => {
+  const toggleMute = (e: MouseEvent) => {
     e.stopPropagation();
     setIsMuted(!isMuted);
+    if (videoRef.current) videoRef.current.muted = !isMuted;
   };
 
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const handleTimeUpdate = () => {
-      const p = (video.currentTime / video.duration) * 100;
-      setProgress(p);
-    };
-
-    video.addEventListener('timeupdate', handleTimeUpdate);
-    return () => video.removeEventListener('timeupdate', handleTimeUpdate);
-  }, [isPlaying]);
-  
-  // Badge logic
-  const getBadgeStyles = () => {
-    switch (product?.badge) {
-      case 'Latest': return 'bg-blue-500/10 text-blue-500 border-blue-500/20';
-      case 'Hot Sell': return 'bg-orange-500/10 text-orange-500 border-orange-500/20';
-      case 'Trending': return 'bg-purple-500/10 text-purple-500 border-purple-500/20';
-      default: return 'bg-primary/10 text-primary border-primary/20';
-    }
-  };
-
-  const getBadgeIcon = () => {
-    switch (product?.badge) {
-      case 'Latest': return <Sparkles size={12} />;
-      case 'Hot Sell': return <Flame size={12} />;
-      case 'Trending': return <TrendingUp size={12} />;
-      default: return <Zap size={12} />;
-    }
-  };
-
-  const isOutOfStock = product?.stockCount === 0;
-  const isLowStock = product && product.stockCount > 0 && product.stockCount <= 3;
-  const discountPercentage = product ? Math.round(((product.originalPrice - product.currentPrice) / product.originalPrice) * 100) : 0;
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    if (!loading && product) {
-      setTimeout(() => setIsRevealed(true), 100);
-    } else if (!loading && !product) {
-      navigate('/store');
-    }
-  }, [loading, product, navigate]);
-// ...
-  if (loading || !product) return null;
-// ...
-  const recommendedProducts = allProducts.filter(p => p.id !== product.id).slice(0, 2);
+  const recommendedProducts = PRODUCTS.filter(p => p.id !== product.id).slice(0, 2);
 
   return (
     <div className="bg-secondary min-h-screen">
